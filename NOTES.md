@@ -45,11 +45,33 @@ _(Pega tus ideas aquí)_
 
 ## Error
 
+File "/opt/render/project/src/.venv/lib/python3.14/site-packages/django/template/base.py", line 1005, in render
+return SafeString("".join([node.render_annotated(context) for node in self]))
+~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
 File "/opt/render/project/src/.venv/lib/python3.14/site-packages/django/template/base.py", line 966, in render_annotated
-Menu
 return self.render(context)
-
-```^^^^^^^^^
+~~~~~~~~~~~^^^^^^^^^
+Menu
+File "/opt/render/project/src/.venv/lib/python3.14/site-packages/django/template/loader_tags.py", line 157, in render
+return compiled_parent.\_render(context)
+~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+File "/opt/render/project/src/.venv/lib/python3.14/site-packages/django/template/base.py", line 167, in \_render
+return self.nodelist.render(context)
+~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+File "/opt/render/project/src/.venv/lib/python3.14/site-packages/django/template/base.py", line 1005, in render
+return SafeString("".join([node.render_annotated(context) for node in self]))
+~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+File "/opt/render/project/src/.venv/lib/python3.14/site-packages/django/template/base.py", line 966, in render_annotated
+return self.render(context)
+~~~~~~~~~~~^^^^^^^^^
+File "/opt/render/project/src/.venv/lib/python3.14/site-packages/django/template/loader_tags.py", line 63, in render
+result = block.nodelist.render(context)
+File "/opt/render/project/src/.venv/lib/python3.14/site-packages/django/template/base.py", line 1005, in render
+return SafeString("".join([node.render_annotated(context) for node in self]))
+~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+File "/opt/render/project/src/.venv/lib/python3.14/site-packages/django/template/base.py", line 966, in render_annotated
+return self.render(context)
+~~~~~~~~~~~^^^^^^^^^
 File "/opt/render/project/src/.venv/lib/python3.14/site-packages/django/template/defaulttags.py", line 194, in render
 len_values = len(values)
 File "/opt/render/project/src/.venv/lib/python3.14/site-packages/django/db/models/query.py", line 382, in **len**
@@ -89,7 +111,7 @@ File "/opt/render/project/src/.venv/lib/python3.14/site-packages/django/db/backe
 return super().execute(query, params)
 ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
 django.db.utils.OperationalError: no such table: core_newsitem
-127.0.0.1 - - [22/Feb/2026:15:48:31 +0000] "GET / HTTP/1.1" 500 199890 "-" "Go-http-client/2.0"
+127.0.0.1 - - [22/Feb/2026:17:12:39 +0000] "GET / HTTP/1.1" 500 201995 "https://the-silicon-citadel.onrender.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
 Internal Server Error: /
 Traceback (most recent call last):
 File "/opt/render/project/src/.venv/lib/python3.14/site-packages/django/db/backends/utils.py", line 89, in \_execute
@@ -186,33 +208,4 @@ File "/opt/render/project/src/.venv/lib/python3.14/site-packages/django/db/backe
 return super().execute(query, params)
 ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
 django.db.utils.OperationalError: no such table: core_newsitem
-127.0.0.1 - - [22/Feb/2026:15:49:00 +0000] "GET / HTTP/1.1" 500 201964 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
-Not Found: /favicon.ico
-127.0.0.1 - - [22/Feb/2026:15:49:00 +0000] "GET /favicon.ico HTTP/1.1" 404 9660 "https://the-silicon-citadel.onrender.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
-[2026-02-22 15:49:29 +0000] [57] [INFO] Handling signal: term
-[2026-02-22 15:49:29 +0000] [59] [INFO] Worker exiting (pid: 59)
-[2026-02-22 15:49:30 +0000] [57] [INFO] Shutting down: Master
-==> Setting WEB_CONCURRENCY=1 by default, based on available CPUs in the instance
-==> Deploying...
-==> Running 'gunicorn silicon.wsgi:application'
-[2026-02-22 15:55:02 +0000] [56] [INFO] Starting gunicorn 25.1.0
-[2026-02-22 15:55:02 +0000] [56] [INFO] Listening at: http://0.0.0.0:10000 (56)
-[2026-02-22 15:55:02 +0000] [56] [INFO] Using worker: sync
-[2026-02-22 15:55:02 +0000] [56] [INFO] Control socket listening at /opt/render/project/src/gunicorn.ctl
-==> Your service is live 🎉
-==>
-==> ///////////////////////////////////////////////////////////
-==>
-==> Available at your primary URL https://the-silicon-citadel.onrender.com
-==>
-==> ///////////////////////////////////////////////////////////
-==> No open HTTP ports detected on 0.0.0.0, continuing to scan...
-[2026-02-22 15:56:06 +0000] [56] [INFO] Handling signal: term
-[2026-02-22 15:56:06 +0000] [58] [INFO] Worker exiting (pid: 58)
-[2026-02-22 15:56:07 +0000] [56] [INFO] Shutting down: Master
-==> No open HTTP ports detected on 0.0.0.0, continuing to scan...
-==> No open HTTP ports detected on 0.0.0.0, continuing to scan...
-==> No open HTTP ports detected on 0.0.0.0, continuing to scan...
-==> No open HTTP ports detected on 0.0.0.0, continuing to scan...
-==> Port scan timeout reached, no open HTTP ports detected. If you don't need to receive public HTTP traffic, create a private service instead.
-```
+127.0.0.1 - - [22/Feb/2026:17:15:22 +0000] "GET / HTTP/1.1" 500 202130 "https://the-silicon-citadel.onrender.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
