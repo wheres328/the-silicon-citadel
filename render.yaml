@@ -2,15 +2,15 @@ services:
   - type: web
     name: the-silicon-citadel
     env: python
-    buildCommand: |
-      pip install -r requirements.txt
-      python manage.py migrate
-      python manage.py collectstatic --noinput
-    startCommand: gunicorn silicon.wsgi:application
+    region: oregon
+    buildCommand: "pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput"
+    startCommand: "gunicorn silicon.wsgi:application --bind 0.0.0.0:$PORT"
     envVars:
+      - key: PYTHON_VERSION
+        value: "3.11"
       - key: DEBUG
         value: "False"
       - key: ALLOWED_HOSTS
         value: "the-silicon-citadel.onrender.com"
       - key: SECRET_KEY
-        generateValue: true
+        value: "django-prod-key-change-this"
