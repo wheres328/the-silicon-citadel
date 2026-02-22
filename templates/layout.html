@@ -48,9 +48,9 @@
             box-shadow: 0 0 10px var(--accent-primary);
         }
         
-        /* Mobile Menu Button */
+        /* Mobile Menu Button - hidden on desktop */
         .mobile-menu-btn {
-            display: flex;
+            display: none;
             flex-direction: column;
             gap: 5px;
             padding: 8px;
@@ -68,6 +68,13 @@
             width: 24px;
             height: 2px;
             background: var(--accent-primary);
+        }
+        
+        /* Show mobile button only on small screens */
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: flex;
+            }
         }
         
         /* Mobile Menu */
@@ -236,7 +243,7 @@
             </div>
             
             <!-- Menú desktop -->
-            <div class="header-bar mt-2 hidden md:block">
+            <div class="header-bar mt-2">
                 <div class="header-links">
                     <a href="{% url 'index' %}" class="{% if request.resolver_match.url_name == 'index' %}header-link-active{% endif %}">🏠 Great Hall</a>
                     <a href="{% url 'vault' %}" class="{% if request.resolver_match.url_name == 'vault' %}header-link-active{% endif %}">⚒️ Deep Delve</a>
@@ -246,7 +253,7 @@
                     <a href="{% url 'donate' %}" class="{% if request.resolver_match.url_name == 'donate' %}header-link-active{% endif %}">💰 Tribute</a>
 
                     <!-- Buscador inteligente en el header -->
-                    <div class="header-search-container hidden md:flex">
+                    <div class="header-search-container">
                         <form action="{% url 'search_results' %}" method="get" class="flex items-center">
                             <input name="q" type="text" placeholder="Buscar en la fortaleza..." class="header-search-input">
                             <span class="header-search-icon">🔍</span>
