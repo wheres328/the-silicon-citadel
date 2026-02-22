@@ -3,7 +3,7 @@ import django
 from django.utils import timezone
 from datetime import date
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "forge_and_chip.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "silicon.settings")
 django.setup()
 
 from core.models import NewsItem, BlogPost

@@ -15,8 +15,8 @@ Comunidad tecnológica de República Dominicana - Foro, blog y portal de servici
 
 ```bash
 # Clonar el repositorio
-git clone https://github.com/tu-usuario/annas-new-site.git
-cd annas-new-site
+git clone https://github.com/tu-usuario/the-silicon-citadel.git
+cd the-silicon-citadel
 
 # Crear entorno virtual
 python -m venv venv
@@ -40,18 +40,18 @@ python manage.py runserver
 ## 📁 Estructura
 
 ```
-annas-new-site/
+the-silicon-citadel/
 ├── core/               # App principal
 │   ├── models.py       # Modelos de datos
 │   ├── views.py        # Vistas del sitio
 │   ├── urls.py         # Rutas
-│   ├── forms.py       # Formularios
-│   └── admin.py       # Configuración admin
+│   ├── forms.py        # Formularios
+│   └── admin.py        # Configuración admin
 ├── templates/          # Templates HTML
-├── static/            # CSS, JS, imágenes
-├── forge_and_chip/   # Configuración Django
-├── db.sqlite3        # Base de datos
-└── requirements.txt   # Dependencias
+├── static/             # CSS, JS, imágenes
+├── silicon/            # Configuración Django
+├── db.sqlite3          # Base de datos
+└── requirements.txt     # Dependencias
 ```
 
 ## 🔧 Configuración
@@ -69,7 +69,7 @@ DATABASE_URL=postgres://user:pass@localhost:5432/dbname
 
 ```bash
 # Usar gunicorn
-gunicorn forge_and_chip.wsgi:application --bind 0.0.0.0:8000
+gunicorn silicon.wsgi:application --bind 0.0.0.0:8000
 ```
 
 ## 📝 Rutas Principales

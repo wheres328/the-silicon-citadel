@@ -1,5 +1,5 @@
 """
-ASGI config for forge_and_chip project.
+ASGI config for The Silicon Citadel project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'forge_and_chip.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'silicon.settings')
 
 application = get_asgi_application()
