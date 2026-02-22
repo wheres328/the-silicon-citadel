@@ -1,0 +1,500 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }} - Forge & Chip{% endblock %}
+
+{% block body %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<style>
+    .form-input, .form-textarea {
+        width: 100%;
+        background: var(--bg-color);
+        border: 1px solid var(--border-color);
+        padding: 12px 14px;
+        color: var(--text-main);
+        font-size: 14px;
+        border-radius: 6px;
+        outline: none;
+        transition: all 0.3s;
+    }
+    .form-select, 
+    select.form-select,
+    .form-category {
+        width: 100%;
+        background: var(--bg-color) !important;
+        border: 2px solid var(--border-color) !important;
+        padding: 14px 16px 14px 16px !important;
+        color: var(--text-main) !important;
+        font-size: 14px !important;
+        border-radius: 6px !important;
+        outline: none !important;
+        transition: all 0.3s !important;
+        cursor: pointer !important;
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23f59e0b' stroke-width='3'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") !important;
+        background-repeat: no-repeat !important;
+        background-position: right 14px center !important;
+        padding-right: 44px !important;
+        font-weight: 600 !important;
+        display: block !important;
+    }
+    .form-select:focus, 
+    select.form-select:focus,
+    .form-category:focus {
+        border-color: #f59e0b !important;
+        background-color: var(--card-bg) !important;
+        box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.15) !important;
+    }
+    .form-input:focus, .form-textarea:focus {
+        border-color: #f59e0b;
+        background: var(--card-bg);
+        box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+    }
+    .form-textarea {
+        min-height: 400px;
+        font-family: 'Fira Code', 'Consolas', monospace;
+        font-size: 13px;
+        line-height: 1.6;
+        resize: vertical;
+    }
+    .markdown-editor {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 20px;
+    }
+    .markdown-guide {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 16px;
+        position: sticky;
+        top: 20px;
+        max-height: 500px;
+        overflow-y: auto;
+    }
+    .markdown-guide h3 {
+        color: #f59e0b;
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .markdown-guide code {
+        background: rgba(245, 158, 11, 0.1);
+        color: #f59e0b;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 12px;
+        font-family: monospace;
+    }
+    .markdown-guide pre {
+        background: #1a1a15;
+        padding: 8px;
+        border-radius: 4px;
+        margin: 4px 0;
+        overflow-x: auto;
+    }
+    .markdown-guide pre code {
+        background: none;
+        padding: 0;
+        color: #a5b4fc;
+    }
+    .markdown-guide p {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-bottom: 8px;
+    }
+    .editor-toolbar {
+        display: flex;
+        gap: 4px;
+        padding: 8px;
+        background: var(--bg-color);
+        border: 1px solid var(--border-color);
+        border-bottom: none;
+        border-radius: 6px 6px 0 0;
+        flex-wrap: wrap;
+    }
+    .editor-toolbar button {
+        width: 36px;
+        height: 36px;
+        border: 1px solid var(--border-color);
+        background: var(--card-bg);
+        color: var(--text-main);
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+    }
+    .editor-toolbar button:hover {
+        background: #f59e0b;
+        color: #000;
+        border-color: #f59e0b;
+    }
+    .preview-box {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 0 0 6px 6px;
+        padding: 16px;
+        min-height: 200px;
+    }
+    .preview-box h1, .preview-box h2, .preview-box h3 {
+        color: var(--text-main);
+        margin: 1em 0 0.5em;
+    }
+    .preview-box h1 { font-size: 1.8em; }
+    .preview-box h2 { font-size: 1.5em; }
+    .preview-box h3 { font-size: 1.25em; }
+    .preview-box p { margin-bottom: 1em; line-height: 1.7; }
+    .preview-box strong { font-weight: bold; color: #f59e0b; }
+    .preview-box em { font-style: italic; }
+    .preview-box ul, .preview-box ol { padding-left: 1.5em; margin: 0.5em 0; }
+    .preview-box li { margin: 0.25em 0; }
+    .preview-box blockquote {
+        border-left: 3px solid #f59e0b;
+        padding-left: 1em;
+        margin: 1em 0;
+        color: var(--text-muted);
+        font-style: italic;
+    }
+    .preview-box code {
+        background: rgba(245, 158, 11, 0.1);
+        color: #f59e0b;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: monospace;
+    }
+    .preview-box pre {
+        background: #1a1a15;
+        padding: 12px;
+        border-radius: 6px;
+        overflow-x: auto;
+    }
+    .preview-box pre code {
+        background: none;
+        color: #a5b4fc;
+        padding: 0;
+    }
+    .preview-box a {
+        color: #f59e0b;
+        text-decoration: underline;
+    }
+    .preview-box img {
+        max-width: 100%;
+        border-radius: 6px;
+    }
+    .form-file {
+        background: var(--bg-color);
+        border: 1px solid var(--border-color);
+        padding: 10px;
+        border-radius: 6px;
+        color: var(--text-muted);
+        font-size: 13px;
+    }
+    .form-file::file-selector-button {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: bold;
+        margin-right: 12px;
+    }
+    .form-file::file-selector-button:hover {
+        background: #f59e0b;
+        color: #000;
+    }
+    .field-hint {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 4px;
+    }
+</style>
+
+<div class="max-w-7xl mx-auto py-8 px-4">
+    <div class="flex items-center gap-4 mb-8">
+        <a href="{% if content_type == 'news' %}{% url 'my_news' %}{% else %}{% url 'my_blogs' %}{% endif %}" class="text-amber-500 hover:text-amber-400 text-2xl">←</a>
+        <div>
+            <h1 class="text-3xl font-black text-main uppercase tracking-tighter" style="color: var(--text-main);">
+                ⚒️ {{ page_title }}
+            </h1>
+            <p class="text-xs text-muted uppercase tracking-widest mt-1">Usa Markdown para formatear tu contenido</p>
+        </div>
+    </div>
+
+    {% if messages %}
+        <div class="mb-6">
+            {% for message in messages %}
+                <div class="p-4 rounded border {% if message.tags == 'success' %}bg-green-900/30 border-green-500 text-green-400{% else %}bg-red-900/30 border-red-500 text-red-400{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="card p-6 border-border-color shadow-2xl" style="background-color: var(--card-bg);">
+        {% if content_type == "news" %}
+        <form action="{% url 'edit_news' item.id %}" method="post" enctype="multipart/form-data" class="space-y-6">
+        {% else %}
+        <form action="{% url 'edit_blog' item.id %}" method="post" class="space-y-6">
+        {% endif %}
+            {% csrf_token %}
+            
+            <!-- Título -->
+            <div class="space-y-2">
+                <label class="text-[11px] font-black text-amber-500 uppercase tracking-widest">Título</label>
+                {{ form.title }}
+            </div>
+            
+            {% if content_type == "news" %}
+            <!-- Category & Image for News -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="text-[11px] font-black text-amber-500 uppercase tracking-widest">Categoría</label>
+                    <select name="category" id="id_category" class="form-select">
+                        {% for value, label in form.category.field.choices %}
+                        <option value="{{ value }}" {% if form.category.value == value or form.category.value == value|stringformat:"s" %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[11px] font-black text-amber-500 uppercase tracking-widest">Imagen</label>
+                    {{ form.image }}
+                    <p class="field-hint">Sube una imagen desde tu computadora</p>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <label class="text-[11px] font-black text-amber-500 uppercase tracking-widest">O Imagen Externa (URL)</label>
+                {{ form.image_url }}
+                <p class="field-hint">Pega la URL de una imagen (Google Images, Imgur, etc.)</p>
+            </div>
+            {% else %}
+            <!-- Author & Date for Blog -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="text-[11px] font-black text-green-500 uppercase tracking-widest">Autor</label>
+                    {{ form.author }}
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[11px] font-black text-green-500 uppercase tracking-widest">Fecha</label>
+                    {{ form.date }}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Short Description -->
+            <div class="space-y-2">
+                <label class="text-[11px] font-black text-amber-500 uppercase tracking-widest">
+                    {% if content_type == "news" %}Descripción Corta{% else %}Resumen{% endif %}
+                </label>
+                {{ form.short_description }}
+                <p class="field-hint">Texto breve que aparece en las listas (máx 300 caracteres)</p>
+            </div>
+            
+            <!-- Content Editor with Markdown -->
+            <div class="space-y-2">
+                <label class="text-[11px] font-black {% if content_type == 'news' %}text-amber-500{% else %}text-green-500{% endif %} uppercase tracking-widest">
+                    Contenido (Markdown)
+                </label>
+                <div class="editor-toolbar">
+                    <button type="button" onclick="insertMarkdown('bold')" title="Negrita"><b>B</b></button>
+                    <button type="button" onclick="insertMarkdown('italic')" title="Cursiva"><i>I</i></button>
+                    <button type="button" onclick="insertMarkdown('h2')" title="Título 2">H2</button>
+                    <button type="button" onclick="insertMarkdown('h3')" title="Título 3">H3</button>
+                    <button type="button" onclick="insertMarkdown('ul')" title="Lista">•</button>
+                    <button type="button" onclick="insertMarkdown('ol')" title="Lista numerada">1.</button>
+                    <button type="button" onclick="insertMarkdown('quote')" title="Cita">"</button>
+                    <button type="button" onclick="insertMarkdown('code')" title="Código">&lt;/&gt;</button>
+                    <button type="button" onclick="insertMarkdown('link')" title="Enlace">🔗</button>
+                    <button type="button" onclick="insertMarkdown('img')" title="Imagen">🖼️</button>
+                </div>
+                <textarea name="{% if content_type == 'news' %}description{% else %}content{% endif %}" id="content-editor" class="form-textarea" placeholder="Escribe tu contenido aquí usando Markdown...">{% if content_type == 'news' %}{{ form.description.value|default:"" }}{% else %}{{ form.content.value|default:"" }}{% endif %}</textarea>
+            </div>
+            
+            <!-- Preview -->
+            <div class="space-y-2">
+                <label class="text-[11px] font-black text-muted uppercase tracking-widest">Vista Previa</label>
+                <div class="preview-box" id="preview">
+                    <p class="text-muted">La vista previa aparecerá aquí...</p>
+                </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="pt-4 flex gap-4">
+                <button type="submit" class="flex-1 bg-amber-600 text-white font-black py-4 uppercase tracking-[0.2em] text-[12px] hover:bg-amber-500 transition-colors rounded shadow-xl">
+                    💾 GUARDAR CAMBIOS
+                </button>
+                <a href="{% if content_type == 'news' %}{% url 'my_news' %}{% else %}{% url 'my_blogs' %}{% endif %}" class="px-6 py-4 border border-border-color text-muted font-black uppercase text-[11px] tracking-widest hover:bg-white/5 transition-colors rounded">
+                    CANCELAR
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Markdown Guide Sidebar -->
+<div class="fixed right-4 top-32 w-64 markdown-guide hidden lg:block">
+    <h3>📖 Guía de Markdown</h3>
+    
+    <p><code>**texto**</code> → <strong>texto en negrita</strong></p>
+    <pre><code>**negrita**</code></pre>
+    
+    <p><code>*texto*</code> → <em>texto en cursiva</em></p>
+    <pre><code>*cursiva*</code></pre>
+    
+    <p>Títulos y encabezados:</p>
+    <pre><code>## Título 2
+### Título 3</code></pre>
+    
+    <p>Listas:</p>
+    <pre><code>- Elemento 1
+- Elemento 2
+
+1. Numerado 1
+2. Numerado 2</code></pre>
+    
+    <p>Citas:</p>
+    <pre><code>> Esto es una cita</code></pre>
+    
+    <p>Código:</p>
+    <pre><code>`código`</code></pre>
+    
+    <p>Enlaces:</p>
+    <pre><code>[texto](url)</code></pre>
+    
+    <p>Imágenes:</p>
+    <pre><code>![alt](imagen-url)</code></pre>
+    
+    <p class="text-amber-500 mt-4 text-[11px] italic">💡 Consejo: Usa la barra de herramientas para insertar formato rápidamente</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.2/marked.min.js"></script>
+<script>
+    const contentField = document.getElementById('content-editor');
+    const preview = document.getElementById('preview');
+    
+    // Simple Markdown parser
+    function parseMarkdown(text) {
+        if (!text) return '<p class="text-muted">La vista previa aparecerá aquí...</p>';
+        
+        // Escape HTML
+        text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        
+        // Headers
+        text = text.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+        text = text.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+        text = text.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+        
+        // Bold
+        text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        
+        // Italic
+        text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        
+        // Code blocks
+        text = text.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+        text = text.replace(/`(.*?)`/g, '<code>$1</code>');
+        
+        // Blockquotes
+        text = text.replace(/^&gt; (.*$)/gim, '<blockquote>$1</blockquote>');
+        
+        // Images
+        text = text.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1">');
+        
+        // Links
+        text = text.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>');
+        
+        // Unordered lists
+        text = text.replace(/^\- (.*$)/gim, '<li>$1</li>');
+        text = text.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+        
+        // Ordered lists
+        text = text.replace(/^\d+\. (.*$)/gim, '<li>$1</li>');
+        
+        // Line breaks
+        text = text.replace(/\n/g, '<br>');
+        
+        // Clean up multiple blockquotes
+        text = text.replace(/<\/blockquote><br><blockquote>/g, '<br>');
+        
+        return text;
+    }
+    
+    // Update preview on input
+    contentField.addEventListener('input', function() {
+        preview.innerHTML = parseMarkdown(this.value);
+    });
+    
+    // Initial preview
+    if (contentField.value) {
+        preview.innerHTML = parseMarkdown(contentField.value);
+    }
+    
+    // Insert markdown functions
+    function insertMarkdown(type) {
+        const start = contentField.selectionStart;
+        const end = contentField.selectionEnd;
+        const text = contentField.value;
+        const selected = text.substring(start, end);
+        let replacement = '';
+        
+        switch(type) {
+            case 'bold':
+                replacement = '**' + (selected || 'texto en negrita') + '**';
+                break;
+            case 'italic':
+                replacement = '*' + (selected || 'texto en cursiva') + '*';
+                break;
+            case 'h2':
+                replacement = '\n## ' + (selected || 'Título') + '\n';
+                break;
+            case 'h3':
+                replacement = '\n### ' + (selected || 'Subtítulo') + '\n';
+                break;
+            case 'ul':
+                replacement = '\n- ' + (selected || 'Elemento de lista');
+                break;
+            case 'ol':
+                replacement = '\n1. ' + (selected || 'Elemento numerado');
+                break;
+            case 'quote':
+                replacement = '\n> ' + (selected || 'Cita');
+                break;
+            case 'code':
+                replacement = '`' + (selected || 'código') + '`';
+                break;
+            case 'link':
+                const url = prompt('URL del enlace:', 'https://');
+                if (url) {
+                    replacement = '[' + (selected || 'enlace') + '](' + url + ')';
+                }
+                break;
+            case 'img':
+                const imgUrl = prompt('URL de la imagen:', 'https://');
+                if (imgUrl) {
+                    replacement = '![' + (selected || 'descripción') + '](' + imgUrl + ')';
+                }
+                break;
+        }
+        
+        if (replacement) {
+            contentField.value = text.substring(0, start) + replacement + text.substring(end);
+            contentField.focus();
+            contentField.selectionStart = contentField.selectionEnd = start + replacement.length;
+            
+            // Update preview
+            preview.innerHTML = parseMarkdown(contentField.value);
+        }
+    }
+</script>
+{% endblock %}

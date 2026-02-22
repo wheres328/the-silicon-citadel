@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Postulación al Gremio - The Silicon Citadel{% endblock %}
+
+{% block body %}
+<div class="max-w-2xl mx-auto py-12 px-4">
+    <!-- Header -->
+    <div class="mb-12 border-b border-border-color pb-8 text-center">
+        <div class="flex items-center justify-center gap-3 text-amber-600 font-mono text-[12px] uppercase tracking-[0.4em] mb-4">
+            <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+            Reclutamiento Activo
+        </div>
+        <h1 class="text-4xl md:text-5xl font-black text-main uppercase italic tracking-tighter mb-4" style="color: var(--text-main);">
+            El Gremio de Técnicos
+        </h1>
+        <p class="text-sm text-muted font-bold uppercase tracking-widest leading-loose" style="color: var(--text-muted);">
+            Buscamos forjadores de hardware y descifradores de código para nuestra división en <span class="text-amber-500">República Dominicana</span>.
+        </p>
+    </div>
+
+    <!-- Application Form Card -->
+    <div class="card p-10 border-border-color shadow-2xl relative overflow-hidden" style="background-color: var(--card-bg);">
+        <!-- Decorative subtle icon background -->
+        <div class="absolute -right-10 -bottom-10 text-[180px] opacity-5 select-none grayscale transform rotate-12">⚒️</div>
+
+        <form action="#" method="post" class="space-y-8 relative z-10">
+            {% csrf_token %}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-2">
+                    <label class="text-[11px] font-black text-stone-500 uppercase tracking-widest">Nombre del Archivista</label>
+                    <input type="text" placeholder="Tu nombre..." class="w-full bg-stone-900/40 border border-border-color p-4 rounded-sm text-sm text-main focus:border-amber-600 outline-none transition-all" style="color: var(--text-main);">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[11px] font-black text-stone-500 uppercase tracking-widest">Grial de Contacto (Email)</label>
+                    <input type="email" placeholder="maestro@citadel.do" class="w-full bg-stone-900/40 border border-border-color p-4 rounded-sm text-sm text-main focus:border-amber-600 outline-none transition-all" style="color: var(--text-main);">
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-[11px] font-black text-stone-500 uppercase tracking-widest">Tu Especialidad</label>
+                <select class="w-full bg-stone-900/40 border border-border-color p-4 rounded-sm text-base text-main focus:border-amber-600 outline-none transition-all" style="color: var(--text-main); background-color: var(--bg-color);">
+                    <option value="hardware">Herrería de Hardware (Reparación)</option>
+                    <option value="software">Alquimia de Código (Programación)</option>
+                    <option value="archivist">Archivista de Datos (Estructuración)</option>
+                    <option value="guardian">Guardián de Redes (Seguridad)</option>
+                </select>
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-[11px] font-black text-stone-500 uppercase tracking-widest">Relato de Batallas Pasadas (Experiencia)</label>
+                <textarea placeholder="Cuéntanos sobre tus forjas previas..." class="w-full bg-stone-900/40 border border-border-color p-4 rounded-sm text-sm text-main focus:border-amber-600 outline-none transition-all h-32 resize-none" style="color: var(--text-main);"></textarea>
+            </div>
+
+            <div class="bg-amber-900/10 border-l-2 border-amber-600 p-6">
+                <p class="text-[12px] text-amber-500/80 leading-relaxed font-mono uppercase tracking-tighter">
+                    ⚠️ NOTA: Esta posición requiere presencia física en los nodos de la <span class="text-amber-500 font-black">República Dominicana</span>. Al postularte, confirmas que puedes desplazarte a nuestra forja central en el Caribe.
+                </p>
+            </div>
+
+            <button type="button" class="w-full py-5 bg-amber-700 hover:bg-amber-600 text-black font-black uppercase tracking-[0.3em] text-sm transition-all shadow-xl rounded-sm">
+                ENVIAR PERGAMINO DE POSTULACIÓN
+            </button>
+        </form>
+    </div>
+
+    <!-- Footnote -->
+    <div class="mt-12 text-center">
+        <p class="text-[11px] text-stone-600 uppercase tracking-widest mb-6">"La disciplina es el combustible de la forja"</p>
+        <a href="{% url 'index' %}" class="text-muted hover:text-amber-500 text-[12px] font-black uppercase tracking-widest no-underline transition-colors">
+            ← Regresar a los Anales Centrales
+        </a>
+    </div>
+</div>
+{% endblock %}

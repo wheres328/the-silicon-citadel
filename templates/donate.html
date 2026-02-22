@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Donar - Forge & Chip{% endblock %}
+
+{% block body %}
+<div class="max-w-4xl mx-auto py-12">
+    <div class="text-center mb-16">
+        <h1 class="text-5xl font-black text-white uppercase italic tracking-tighter mb-4">💰 El Tributo a la Fortaleza</h1>
+        <p class="text-gray-500 max-w-2xl mx-auto uppercase font-mono text-[10px] tracking-widest">The Silicon Citadel es una herrería independiente. Tu tributo asegura que los hornos sigan encendidos y el silicio fluyendo.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Tributo Libre -->
+        <div class="card p-8 border-t-2 border-amber-800 flex flex-col justify-between">
+            <div>
+                <h2 class="text-2xl font-bold mb-4 uppercase italic">Tributo Libre</h2>
+                <p class="text-sm text-gray-500 mb-8 font-mono text-[11px]">Aporta cualquier cantidad para pagar el mantenimiento de las máquinas. Cada lingote cuenta.</p>
+                
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-center gap-3 p-4 bg-stone-900/50 rounded-sm border border-white/5 hover:border-amber-900/50 cursor-pointer transition-colors">
+                        <span class="text-2xl">₿</span>
+                        <div>
+                            <p class="text-[9px] font-black text-amber-600 uppercase">Dirección de la Herrería (BTC)</p>
+                            <p class="text-[9px] font-mono text-gray-600">bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn-primary w-full py-4 font-black uppercase tracking-widest text-[10px]" style="background-color: #78350f !important; color: white !important;">COPIAR PLANO</button>
+        </div>
+
+        <!-- Membresía VIP -->
+        <div class="card p-8 border-t-2 border-yellow-600 bg-yellow-950/5 flex flex-col justify-between">
+            <div>
+                <div class="flex justify-between items-start mb-4">
+                    <h2 class="text-2xl font-bold uppercase italic">Estatus Noble</h2>
+                    <span class="px-2 py-1 bg-yellow-600 text-black text-[8px] font-black uppercase rounded-sm">GRADO MAESTRO</span>
+                </div>
+                <p class="text-sm text-gray-500 mb-8 font-mono text-[11px]">Acceso prioritario a las minas de datos y reconocimiento en la gran sala.</p>
+                
+                <ul class="text-[10px] text-stone-500 font-bold uppercase tracking-tighter space-y-3 mb-8">
+                    <li class="flex items-center gap-2">⚒️ Prioridad en Reparaciones</li>
+                    <li class="flex items-center gap-2">⚒️ Acceso al Deep Delve Ilimitado</li>
+                    <li class="flex items-center gap-2">⚒️ Runa Dorada de Nobleza</li>
+                </ul>
+            </div>
+            <a href="{% url 'upgrade_vip' %}" class="btn-primary w-full py-4 font-black uppercase tracking-widest text-center no-underline" style="background-color: #d97706 !important;">Convertirme en VIP</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

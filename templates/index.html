@@ -1,0 +1,129 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<!-- CONTENEDOR DE LA PÁGINA DE INICIO: Usa Flexbox para las dos columnas -->
+<div class="lg:flex lg:flex-wrap lg:justify-between">
+    
+    <!-- COLUMNA IZQUIERDA: Buscadores y Entradas Detalladas -->
+    <div class="lg:w-[50%] lg:pr-3">
+        
+        <!-- TARJETA DE BÚSQUEDA: "THE ARTIFACT CATALOG" -->
+        <div class="card border-l-4 border-yellow-600" style="background-color: var(--card-bg);">
+            <h2 class="text-xl font-black italic uppercase tracking-tighter mb-1" style="color: var(--text-main);">🔍 The Artifact Catalog</h2>
+            <p class="text-[12px] text-muted uppercase font-bold tracking-widest mb-4" style="color: var(--text-muted);">Busca Componentes, Laptops y Consolas</p>
+            <form action="{% url 'vault' %}" method="get" role="search" aria-label="Buscador de artefactos">
+                <div class="flex flex-col gap-3">
+                    <div class="flex">
+                        <input name="q" type="text" placeholder="¿Qué buscas hoy, archivista?" 
+                               class="flex-grow bg-white/5 border border-white/10 px-4 py-3 rounded-l-sm text-sm text-main focus:border-yellow-600 outline-none transition-all"
+                               aria-label="Término de búsqueda" style="color: var(--text-main);">
+                        <button type="submit" class="bg-yellow-700 hover:bg-yellow-600 px-6 font-black text-black text-xs uppercase transition-all rounded-r-sm" aria-label="Ejecutar búsqueda">
+                            BUSCAR
+                        </button>
+                    </div>
+                    <div class="flex gap-2 flex-wrap">
+                        <a href="{% url 'vault' %}?q=Laptops" class="px-2 py-1 bg-white/5 text-[11px] font-bold text-gray-400 rounded-sm hover:bg-yellow-900/20 hover:text-yellow-400 cursor-pointer transition-colors border border-transparent hover:border-yellow-900/30 no-underline">💻 Laptops</a>
+                        <a href="{% url 'vault' %}?q=Reparaciones" class="px-2 py-1 bg-white/5 text-[11px] font-bold text-gray-400 rounded-sm hover:bg-yellow-900/20 hover:text-yellow-400 cursor-pointer transition-colors border border-transparent hover:border-yellow-900/30 no-underline">🔨 Reparaciones</a>
+                        <a href="{% url 'vault' %}?q=Consolas" class="px-2 py-1 bg-white/5 text-[11px] font-bold text-gray-400 rounded-sm hover:bg-yellow-900/20 hover:text-yellow-400 cursor-pointer transition-colors border border-transparent hover:border-yellow-900/30 no-underline">🎮 Consolas</a>
+                        <a href="{% url 'vault' %}?q=Software" class="px-2 py-1 bg-white/5 text-[11px] font-bold text-gray-400 rounded-sm hover:bg-yellow-900/20 hover:text-yellow-400 cursor-pointer transition-colors border border-transparent hover:border-yellow-900/30 no-underline">💾 Software</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- TARJETA DE SCIDB: "THE COMPONENT RESOLVER" -->
+        <div class="card relative overflow-hidden group border-blue-900/20" style="background-color: var(--card-bg);">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-blue-600/5 rounded-full blur-3xl group-hover:bg-blue-600/10 transition-all"></div>
+            
+            <h2 class="text-xl font-black italic uppercase tracking-tighter mb-1 text-blue-400">📡 Component Resolver</h2>
+            <p class="text-[12px] text-muted uppercase font-bold tracking-widest mb-4" style="color: var(--text-muted);">Rastreo de piezas y números de serie</p>
+            <form action="{% url 'vault' %}" method="get" aria-label="Resolutor de componentes">
+                <div class="relative">
+                    <div class="flex items-center gap-2 bg-blue-950/20 p-2 rounded-sm border border-blue-900/30">
+                        <input name="q" type="text" placeholder="Escribe ID o S/N..." 
+                               class="bg-transparent border-none w-full text-xs text-blue-300 font-mono focus:ring-0 outline-none p-1"
+                               aria-label="Número de serie o ID del componente">
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white p-2 rounded-sm transition-all" aria-label="Resolver">
+                            <span class="text-[12px] font-black">SCAN</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="mt-3 flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></span>
+                    <span class="text-[9px] font-mono text-blue-900 uppercase">Enlace con base de datos de repuestos: Activo</span>
+                </div>
+            </form>
+        </div>
+
+        <!-- SECCIÓN DE ENTRADAS DETALLADAS -->
+        <div class="card" style="background-color: var(--card-bg);">
+            <h2 class="text-xl font-black italic uppercase tracking-tighter mb-4 flex items-center gap-2" style="color: var(--text-main);">
+                <span class="text-yellow-600">📜</span> Fortress Dispatches
+            </h2>
+            
+            <div class="news-scroll-container">
+                {% for item in news_items %}
+                <a href="{% url 'news_detail' item.slug %}" class="news-item">
+                    {% if item.image or item.image_url %}
+                        <img src="{{ item.get_image }}" alt="{{ item.title }}" class="news-item-img border border-white/5">
+                    {% else %}
+                        <img src="https://placehold.co/80x80/1a1a15/fbbf24?text=ARTIFACT" alt="Thumbnail" class="news-item-img border border-white/5">
+                    {% endif %}
+                    <div class="news-item-content">
+                        <span class="news-item-title link-custom font-bold italic">{{ item.title }}</span>
+                        <p class="news-item-desc text-[11px] leading-relaxed">{{ item.get_description|truncatewords:15 }}</p>
+                        <div class="news-item-meta text-[9px] uppercase font-bold tracking-tighter flex items-center gap-4">
+                            <span class="text-gray-600">📅 {{ item.created_at|date:"d M Y" }}</span>
+                            <span class="text-yellow-700">⚔️ {{ item.category }}</span>
+                        </div>
+                    </div>
+                </a>
+                {% empty %}
+                <p class="text-sm text-gray-500 p-4 font-mono italic">No hay despachos nuevos en los registros.</p>
+                {% endfor %}
+            </div>
+            <a href="{% url 'actualizaciones' %}" class="view-all-link text-center block w-full py-4 mt-6 border border-white/5 hover:border-yellow-900/50 hover:text-yellow-500 transition-all font-black italic text-[10px]">VER TODAS LAS ACTUALIZACIONES</a>
+        </div>
+
+    </div>
+
+    <!-- COLUMNA DERECHA: Anuncios, Blog y Gremio -->
+    <div class="lg:w-[50%]">
+        
+        <!-- BLOQUE DE ANUNCIO -->
+        <div class="alert-custom border-l-4 border-yellow-600 bg-yellow-950/10 text-yellow-500 italic font-bold">
+            "Strike the Earth! El silicio es solo piedra con electricidad. Nosotros dominamos ambos."
+        </div>
+
+        <!-- TARJETA DEL BLOG: MASTERWORK LOGS -->
+        <div class="card" style="background-color: var(--card-bg);">
+            <h2 class="text-xl font-black italic uppercase tracking-tighter mb-6 flex items-center gap-2" style="color: var(--text-main);">
+                <span class="text-yellow-600">⚒️</span> Masterwork Logs
+            </h2>
+            <div class="space-y-4">
+                {% for post in blog_posts %}
+                <div class="blog-item group p-2 hover:bg-white/5 transition-all">
+                    <a href="{% url 'blog_detail' post.slug %}" class="link-custom font-bold block mb-1 group-hover:text-yellow-500 transition-colors">{{ post.title }}</a>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600 text-[11px] uppercase font-black tracking-widest">REGISTRO DE HERRERÍA</span>
+                        <span class="text-gray-700 text-[11px] font-mono">{{ post.date|date:"Y-m-d" }}</span>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-sm text-gray-500 p-2 font-mono italic">Buscando pergaminos antiguos...</p>
+                {% endfor %}
+            </div>
+            <a href="{% url 'blogs' %}" class="view-all-link text-center block w-full py-4 mt-6 border border-white/5 hover:border-yellow-900/50 hover:text-yellow-500 transition-all font-black italic text-[10px]">VER TODOS LOS MANUSCRITOS</a>
+        </div>
+
+        <!-- TARJETA DE VOLUNTARIADO: EL GREMIO -->
+        <div class="card border-l-4 border-zinc-700" style="background-color: var(--card-bg);">
+            <h2 class="text-xl font-black italic uppercase tracking-tighter mb-2" style="color: var(--text-main);">🤝 El Gremio de Técnicos</h2>
+            <p class="text-[13px] text-gray-500 leading-relaxed mb-4">
+                ¿Tienes habilidades con el soldador o descifrando código prohibido? Únete a la guarnición.
+            </p>
+            <a href="{% url 'guild_application' %}" class="inline-block link-custom font-black uppercase text-[10px] tracking-widest border-b-2 border-yellow-800 pb-1">Postular al Clan →</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

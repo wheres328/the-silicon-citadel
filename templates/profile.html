@@ -1,0 +1,380 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Mi Perfil - Forge & Chip{% endblock %}
+
+{% block body %}
+<!-- ESTILOS EXCLUSIVOS PARA VIP Y CREADORES -->
+<style>
+    .vip-gold-text {
+        background: linear-gradient(to right, #fbbf24, #fde68a, #d97706);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .vip-glow-card {
+        position: relative;
+        overflow: hidden;
+    }
+    .vip-glow-card::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(217, 119, 6, 0.05) 0%, transparent 70%);
+        pointer-events: none;
+    }
+    .form-input, 
+    .tab-content input, 
+    .tab-content select, 
+    .tab-content textarea {
+        width: 100%;
+        background: var(--bg-color);
+        border: 1px solid var(--border-color);
+        padding: 10px 14px;
+        color: var(--text-main);
+        font-size: 15px;
+        border-radius: 4px;
+        outline: none;
+        transition: all 0.3s;
+    }
+    .form-input:focus,
+    .tab-content input:focus, 
+    .tab-content select:focus, 
+    .tab-content textarea:focus {
+        border-color: var(--accent-primary);
+        background: var(--card-bg);
+    }
+    [data-theme="light"] .form-input,
+    [data-theme="light"] .tab-content input,
+    [data-theme="light"] .tab-content select,
+    [data-theme="light"] .tab-content textarea {
+        background: white;
+        color: black;
+    }
+    .form-input-file {
+        font-size: 13px;
+        color: var(--text-muted);
+        width: 100%;
+        background: var(--bg-color);
+        border: 1px solid var(--border-color);
+        padding: 8px;
+        border-radius: 4px;
+    }
+    .form-input-file::file-selector-button {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
+        padding: 6px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+        margin-right: 8px;
+    }
+    .form-input-file::file-selector-button:hover {
+        background: var(--accent-primary);
+        color: #000;
+    }
+    .creator-tab {
+        cursor: pointer;
+        padding: 8px 16px;
+        font-size: 13px;
+        font-weight: 800;
+        text-transform: uppercase;
+        border-bottom: 2px solid transparent;
+        color: var(--text-muted);
+        transition: all 0.3s;
+    }
+    .creator-tab.active {
+        color: var(--accent-primary);
+        border-bottom-color: var(--accent-primary);
+    }
+</style>
+
+<div class="max-w-5xl mx-auto py-12">
+    <!-- Header de Perfil Mejorado -->
+    <div class="mb-12 flex flex-col md:flex-row items-center justify-between gap-8 bg-card-bg p-8 rounded-sm border border-border-color backdrop-blur-md shadow-xl" style="background-color: var(--card-bg);">
+        <div class="flex flex-col md:flex-row items-center gap-8">
+            <div class="relative group">
+                <div class="w-28 h-28 rounded-full flex items-center justify-center text-5xl border-4 shadow-[0_0_30px_rgba(0,0,0,0.5)] transition-all duration-700
+                    {% if user.profile.is_vip %}
+                        bg-gradient-to-br from-yellow-400 via-amber-600 to-yellow-800 border-yellow-500 shadow-yellow-600/20 rotate-[360deg]
+                    {% else %}
+                        bg-gradient-to-br from-zinc-700 to-stone-900 border-white/10 shadow-black/40
+                    {% endif %}">
+                    {% if user.profile.is_vip %}👑{% else %}👤{% endif %}
+                </div>
+                {% if user.profile.is_vip %}
+                    <div class="absolute -bottom-2 -right-2 bg-yellow-600 text-black text-[10px] font-black px-2 py-1 rounded-full border-2 border-black">LEGENDARY</div>
+                {% endif %}
+            </div>
+            
+                <div class="flex flex-col md:flex-row items-center gap-3">
+                    <h1 class="text-5xl font-black text-main uppercase tracking-tighter {% if user.profile.is_vip %}vip-gold-text underline decoration-yellow-600/30{% endif %}" style="color: var(--text-main);">
+                        {{ user.username }}
+                    </h1>
+                </div>
+                <p class="{% if user.profile.is_vip %}text-yellow-500{% else %}text-zinc-500{% endif %} font-bold uppercase text-[12px] tracking-[0.3em] mt-2">
+                    {% if user.profile.is_vip %}Archivista de Rango S{% else %}Miembro de la Forja{% endif %} • Desde {{ user.date_joined|date:"M Y" }}
+                </p>
+            </div>
+        </div>
+        
+        <div class="flex gap-4">
+            {% if user.profile.can_moderate %}
+                <a href="{% url 'mod_panel' %}" class="px-6 py-3 bg-red-800 hover:bg-red-700 text-white text-[10px] font-black uppercase tracking-widest transition-all rounded-sm no-underline shadow-lg">
+                    🛡️ Moderación
+                </a>
+            {% endif %}
+            {% if not user.profile.is_vip %}
+                <a href="{% url 'donate' %}" class="px-6 py-3 bg-amber-700 hover:bg-amber-600 text-white text-[10px] font-black uppercase tracking-widest transition-all rounded-sm no-underline shadow-lg shadow-black/40">
+                    Saca tu Rango VIP
+                </a>
+            {% endif %}
+            <a href="{% url 'logout' %}" class="px-6 py-3 border border-border-color text-muted transition-all shadow-sm text-[10px] font-black uppercase tracking-widest rounded-sm no-underline" style="border-color: var(--border-color); color: var(--text-muted); background-color: transparent;" onmouseover="this.style.backgroundColor='var(--hover-bg)'; this.style.color='var(--text-main)'" onmouseout="this.style.backgroundColor='transparent'; this.style.color='var(--text-muted)'">
+                Cerrar Sesión
+            </a>
+        </div>
+    </div>
+
+    <!-- Layout de Columnas -->
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        
+        <!-- SIDEBAR: Actividad y Estado -->
+        <div class="lg:col-span-1 space-y-6">
+            <div class="card p-6 border-border-color {% if user.profile.is_vip %}border-yellow-600/20 bg-yellow-600/[0.01]{% endif %}" style="background-color: var(--card-bg);">
+                <h3 class="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em] mb-6">Métrica de Acceso</h3>
+                <div class="space-y-6">
+                    <div class="flex justify-between items-end">
+                        <span class="text-xs text-muted font-bold" style="color: var(--text-muted);">DESCARGAS</span>
+                        <span class="text-2xl font-black text-main" style="color: var(--text-main);">
+                            {% if user.profile.is_vip %}∞{% else %}12{% endif %}
+                        </span>
+                    </div>
+                    <div class="w-full bg-white/5 h-1 rounded-full overflow-hidden">
+                        <div class="h-full {% if user.profile.is_vip %}bg-yellow-600 w-full{% else %}bg-amber-600 w-1/3{% endif %}"></div>
+                    </div>
+                    <div class="flex justify-between items-center text-[9px] font-bold text-gray-600">
+                        <span>CAPACIDAD</span>
+                        <span>{% if user.profile.is_vip %}ILIMITADA{% else %}35% USADO{% endif %}</span>
+                    </div>
+                </div>
+            </div>
+
+            {% if user.profile.is_vip %}
+            <div class="card p-6 border-yellow-600/40 bg-gradient-to-br from-yellow-950/20 to-transparent">
+                <span class="text-[8px] bg-yellow-600 text-black font-black px-2 py-0.5 rounded-sm uppercase mb-4 inline-block">VIP ACTIVE</span>
+                <h4 class="text-sm font-bold text-white mb-2 italic">Protocolo Hydra Activo</h4>
+                <p class="text-[10px] text-gray-500 leading-relaxed">Tienes acceso a los nodos privados de Forge & Chip. Tus peticiones tienen prioridad S1 en la cola de descarga.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- CONTENIDO PRINCIPAL: Creator Studio o Recent Activity -->
+        <div class="lg:col-span-3 space-y-8">
+            
+            {% if user.is_staff %}
+            <!-- Resumen de Publicaciones Recientes -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="card p-6 border-border-color" style="background-color: var(--card-bg);">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xs font-black text-amber-500 uppercase tracking-widest">📰 Últimas Actualizaciones</h3>
+                        <a href="{% url 'my_news' %}" class="text-[10px] text-muted hover:text-amber-500 uppercase">Ver todas →</a>
+                    </div>
+                    {% for news in my_news %}
+                        <div class="py-3 border-b border-border-color/30">
+                            <a href="{% url 'news_detail' news.slug %}" class="text-main font-bold text-sm hover:text-amber-500 block truncate" style="color: var(--text-main);">{{ news.title }}</a>
+                            <span class="text-[10px] text-muted">{{ news.created_at|date:"d/m/Y" }} • {{ news.category }}</span>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted text-xs">No hay actualizaciones publicadas.</p>
+                    {% endfor %}
+                </div>
+                
+                <div class="card p-6 border-border-color" style="background-color: var(--card-bg);">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xs font-black text-green-500 uppercase tracking-widest">📝 Últimos Blogs</h3>
+                        <a href="{% url 'my_blogs' %}" class="text-[10px] text-muted hover:text-green-500 uppercase">Ver todos →</a>
+                    </div>
+                    {% for blog in my_blogs %}
+                        <div class="py-3 border-b border-border-color/30">
+                            <a href="{% url 'blog_detail' blog.slug %}" class="text-main font-bold text-sm hover:text-green-500 block truncate" style="color: var(--text-main);">{{ blog.title }}</a>
+                            <span class="text-[10px] text-muted">{{ blog.date|date:"d/m/Y" }} • {{ blog.author }}</span>
+                        </div>
+                    {% empty %}
+                        <p class="text-muted text-xs">No hay artículos publicados.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="card p-0 border-border-color shadow-2xl overflow-hidden" style="background-color: var(--card-bg);">
+                <div class="p-6 border-b border-border-color flex justify-between items-center" style="background-color: rgba(var(--text-main-rgb, 255,255,255), 0.03);">
+                    <h2 class="text-xl font-black text-main italic tracking-tighter uppercase flex items-center gap-3" style="color: var(--text-main);">
+                        <span class="flex h-3 w-3 relative">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                        </span>
+                        Creator Studio
+                    </h2>
+                    <div class="flex gap-2">
+                        <div id="btn-tab-news" class="creator-tab active" onclick="switchTab('news')">Actualización</div>
+                        <div id="btn-tab-blog" class="creator-tab" onclick="switchTab('blog')">Nuevo Blog</div>
+                    </div>
+                </div>
+                
+                <div class="p-8">
+                    <!-- Formulario Noticias -->
+                    <div id="form-news" class="tab-content transition-all duration-500">
+                        <form action="{% url 'create_news' %}" method="post" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {% csrf_token %}
+                            <div class="md:col-span-2 space-y-2">
+                                <label class="text-[9px] font-black text-gray-500 uppercase">Título de la Noticia</label>
+                                {{ news_form.title }}
+                            </div>
+                            <div class="md:col-span-2 space-y-2">
+                                <label class="text-[9px] font-black text-gray-500 uppercase">Descripción Corta (para listas)</label>
+                                {{ news_form.short_description }}
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[9px] font-black text-gray-500 uppercase">Categoría</label>
+                                {{ news_form.category }}
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[9px] font-black text-gray-500 uppercase">Imagen de Portada</label>
+                                {{ news_form.image }}
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[9px] font-black text-gray-500 uppercase">O URL de Imagen Externa</label>
+                                {{ news_form.image_url }}
+                            </div>
+                            <div class="md:col-span-2 space-y-2">
+                                <label class="text-[9px] font-black text-gray-500 uppercase">Descripción detallada</label>
+                                {{ news_form.description }}
+                            </div>
+                            <div class="md:col-span-2 pt-4">
+                                <button type="submit" class="w-full bg-white text-black font-black py-4 uppercase tracking-[0.2em] text-[11px] hover:bg-gray-200 transition-colors rounded-sm shadow-xl">
+                                    PUBLICAR EN LA HOME
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Formulario Blog -->
+                    <div id="form-blog" class="tab-content hidden transition-all duration-500">
+                        <form action="{% url 'create_blog' %}" method="post" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {% csrf_token %}
+                            <div class="md:col-span-2 space-y-2">
+                                <label class="text-[9px] font-black text-gray-500 uppercase">Título del Artículo</label>
+                                {{ blog_form.title }}
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[9px] font-black text-gray-500 uppercase">Autor</label>
+                                {{ blog_form.author }}
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[9px] font-black text-gray-500 uppercase">Fecha de Publicación</label>
+                                {{ blog_form.date }}
+                            </div>
+                            <div class="md:col-span-2 space-y-2">
+                                <label class="text-[9px] font-black text-gray-500 uppercase">Contenido del Post (Soporta HTML básico)</label>
+                                {{ blog_form.content }}
+                            </div>
+                            <div class="md:col-span-2 pt-4">
+                                <button type="submit" class="w-full bg-amber-600 text-white font-black py-4 uppercase tracking-[0.2em] text-[11px] hover:bg-amber-500 transition-colors rounded-sm shadow-xl">
+                                    AÑADIR A FORGE BLOG
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- MIS ARTEFACTOS: Nueva sección de Dashboard Pro -->
+            <div class="card p-8 border-border-color shadow-lg" style="background-color: var(--card-bg);">
+                <div class="flex justify-between items-center mb-8">
+                    <h3 class="text-sm font-black text-main uppercase tracking-widest flex items-center gap-4" style="color: var(--text-main);">
+                        📦 Mis Artefactos en la Forja
+                    </h3>
+                    <span class="text-[9px] font-mono text-amber-500">{{ bookmarks.count }} ÍTEMS REGISTRADOS</span>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {% for bookmark in bookmarks %}
+                        {% if bookmark.news_item %}
+                        <a href="{% url 'news_detail' bookmark.news_item.slug %}" class="p-4 border border-border-color rounded-sm bg-stone-900/40 hover:border-amber-600/30 transition-all cursor-pointer group no-underline block">
+                            <div class="text-2xl mb-2 grayscale group-hover:grayscale-0 transition-all">📜</div>
+                            <div class="text-[10px] font-black text-main uppercase tracking-tighter truncate" style="color: var(--text-main);">{{ bookmark.news_item.title }}</div>
+                            <div class="text-[9px] text-stone-600 font-mono italic">DESPACHO</div>
+                        </a>
+                        {% elif bookmark.blog_post %}
+                        <a href="{% url 'blog_detail' bookmark.blog_post.slug %}" class="p-4 border border-border-color rounded-sm bg-stone-900/40 hover:border-amber-600/30 transition-all cursor-pointer group no-underline block">
+                            <div class="text-2xl mb-2 grayscale group-hover:grayscale-0 transition-all">📔</div>
+                            <div class="text-[10px] font-black text-main uppercase tracking-tighter truncate" style="color: var(--text-main);">{{ bookmark.blog_post.title }}</div>
+                            <div class="text-[9px] text-stone-600 font-mono italic">ANALES</div>
+                        </a>
+                        {% endif %}
+                    {% empty %}
+                        <div class="col-span-full py-12 text-center border border-dashed border-border-color opacity-30">
+                            <p class="text-[10px] font-black uppercase tracking-widest text-muted">Aún no has reclamado ningún artefacto en tus anales personales.</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Actividad Reciente con Skeleton Placeholders -->
+            <div class="card p-8 border-border-color shadow-lg" style="background-color: var(--card-bg);">
+                <h3 class="text-sm font-black text-main uppercase tracking-widest mb-8 flex items-center gap-4" style="color: var(--text-main);">
+                    📡 Registro de Transferencias (Deep Scan)
+                    <span class="h-px bg-border-color flex-grow" style="background-color: var(--border-color);"></span>
+                </h3>
+                
+                <div class="space-y-4">
+                    <!-- Simulación de carga de datos profundos -->
+                    <div class="flex items-center gap-4 py-3 border-b border-border-color/30">
+                        <div class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
+                        <div class="flex-grow space-y-2">
+                            <div class="h-3 w-48 skeleton"></div>
+                            <div class="h-2 w-32 skeleton opacity-50"></div>
+                        </div>
+                        <div class="text-[9px] font-mono text-stone-600">EN CURSO...</div>
+                    </div>
+                    
+                    <div class="flex flex-col items-center justify-center py-24 border border-dashed border-border-color rounded-sm mt-4">
+                        <div class="text-5xl opacity-20 mb-6 grayscale">📡</div>
+                        <p class="text-xs text-muted uppercase font-bold tracking-widest mb-2" style="color: var(--text-muted);">Sincronizando con el Núcleo</p>
+                        <p class="text-[9px] text-stone-600 font-mono">LATENCIA: 14ms • PROTOCOLO: DF-ARCHIVE-V2</p>
+                        <a href="{% url 'vault' %}" class="mt-8 px-8 py-3 border border-amber-900/40 text-amber-500 text-[10px] font-black uppercase tracking-widest hover:bg-amber-950/20 transition-all no-underline">
+                            Sincronizar con el Archivo
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function switchTab(tab) {
+        const newsForm = document.getElementById('form-news');
+        const blogForm = document.getElementById('form-blog');
+        const newsBtn = document.getElementById('btn-tab-news');
+        const blogBtn = document.getElementById('btn-tab-blog');
+
+        if (tab === 'news') {
+            newsForm.classList.remove('hidden');
+            blogForm.classList.add('hidden');
+            newsBtn.classList.add('active');
+            blogBtn.classList.remove('active');
+        } else {
+            newsForm.classList.add('hidden');
+            blogForm.classList.remove('hidden');
+            newsBtn.classList.remove('active');
+            blogBtn.classList.add('active');
+        }
+    }
+</script>
+{% endblock %}

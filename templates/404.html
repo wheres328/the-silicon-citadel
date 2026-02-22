@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}404 - Sector No Encontrado{% endblock %}
+
+{% block body %}
+<div class="flex flex-col items-center justify-center min-h-[70vh] px-4 text-center">
+    <div class="mb-8 relative">
+        <div class="text-[120px] font-black text-amber-600/10 select-none">404</div>
+        <div class="absolute inset-0 flex items-center justify-center">
+            <span class="text-6xl filter grayscale brightness-50">⛏️</span>
+        </div>
+    </div>
+    
+    <h1 class="text-4xl font-black text-main uppercase italic mb-4" style="color: var(--text-main);">Excavación Fallida</h1>
+    <p class="text-muted max-w-md mb-12 uppercase tracking-widest text-xs font-bold leading-loose" style="color: var(--text-muted);">
+        El sector que intentas explorar no existe en los registros físicos de la ciudadela. 
+        Es posible que el mapa esté desactualizado o que los túneles hayan colapsado.
+    </p>
+    
+    <div class="flex flex-col md:flex-row gap-4">
+        <a href="{% url 'index' %}" class="px-10 py-4 bg-amber-700 hover:bg-amber-600 text-black font-black uppercase tracking-widest text-xs transition-all shadow-xl no-underline rounded-sm">
+            Volver a la Superficie
+        </a>
+        <a href="{% url 'vault' %}" class="px-10 py-4 border border-border-color text-main hover:bg-hover-bg font-black uppercase tracking-widest text-xs transition-all no-underline rounded-sm" style="color: var(--text-main); border-color: var(--border-color);">
+            Consultar los Mapas (Vault)
+        </a>
+    </div>
+
+    <div class="mt-20 opacity-20">
+        <p class="font-mono text-[9px] text-zinc-500 uppercase tracking-[0.5em]">Error Code: SECTOR_NOT_FOUND</p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,3 @@
+@echo off
+echo Iniciando servidor de Forge ^& Chip...
+python manage.py runserver

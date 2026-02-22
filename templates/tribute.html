@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Homenaje a Dwarf Fortress - El Origen de la Forja{% endblock %}
+
+{% block body %}
+<div class="max-w-4xl mx-auto py-12 px-4">
+    <!-- HERO SECTION -->
+    <div class="relative rounded-sm overflow-hidden mb-12 border border-border-color shadow-2xl">
+        <img src="{% static 'dwarf_fortress.jpg' %}" alt="Dwarf Fortress" class="w-full h-80 object-cover opacity-60">
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+        <div class="absolute bottom-10 left-10 right-10">
+            <h1 class="text-5xl font-black text-white italic uppercase tracking-tighter mb-4">The Origin of the Forge</h1>
+            <p class="text-amber-500 font-mono text-sm tracking-widest uppercase">Un tributo a Bay 12 Games</p>
+        </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="card p-10 border-border-color" style="background-color: var(--card-bg);">
+        <div class="prose prose-invert max-w-none space-y-8">
+            <h2 class="text-3xl font-black text-main uppercase italic border-b border-border-color pb-4" style="color: var(--text-main);">Strike the Earth!</h2>
+            
+            <p class="text-lg leading-relaxed text-main" style="color: var(--text-main);">
+                <strong>The Silicon Citadel</strong> no es solo un repositorio de tecnología; es una fortaleza digital cuya arquitectura, terminología y espíritu nacen de las profundidades de un juego legendario: <span class="text-amber-600 font-bold">Dwarf Fortress</span>.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 my-12">
+                <div class="p-6 bg-stone-900/40 border border-border-color rounded-sm">
+                    <h3 class="text-amber-500 text-sm font-black uppercase mb-4 tracking-widest">¿Qué es Dwarf Fortress?</h3>
+                    <p class="text-sm text-muted leading-relaxed" style="color: var(--text-muted);">
+                        Creado por Tarn y Zach Adams (Bay 12 Games), es el simulador de construcción y gestión más complejo jamás diseñado. Genera mundos enteros con miles de años de historia, héroes, poemas y desastres mecánicos.
+                    </p>
+                </div>
+                <div class="p-6 bg-stone-900/40 border border-border-color rounded-sm">
+                    <h3 class="text-amber-500 text-sm font-black uppercase mb-4 tracking-widest">Nuestra Inspiración</h3>
+                    <p class="text-sm text-muted leading-relaxed" style="color: var(--text-muted);">
+                        Desde las "Entradas al Gran Salón" hasta el "Deep Delve", hemos tomado prestada la estética de la piedra cincelada, el ámbar y la obsesión por el detalle para crear un hogar para los amantes del hardware.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-amber-900/10 border-l-4 border-amber-600 p-8 my-12">
+                <h3 class="text-xl font-bold text-main italic mb-4" style="color: var(--text-main);">Agradecimientos Especiales</h3>
+                <p class="text-main" style="color: var(--text-main);">
+                    Queremos dar las gracias profundamente a <strong>Bay 12 Games</strong> por décadas de dedicación a un proyecto que redefine lo que un videojuego puede ser. Su compromiso con el desarrollo independiente y la complejidad algorítmica es la llama que mantiene encendida nuestra forja.
+                </p>
+            </div>
+
+            <div class="flex flex-col items-center justify-center pt-8 border-t border-border-color">
+                <p class="text-[10px] text-stone-500 uppercase tracking-[0.3em] font-mono mb-6">"Losing is Fun!"</p>
+                <a href="http://www.bay12games.com/dwarves/" target="_blank" class="px-8 py-4 bg-amber-700 hover:bg-amber-600 text-black font-black uppercase tracking-widest text-xs transition-all shadow-xl no-underline">
+                    Visitar el Sitio de Bay 12 Games
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-12 text-center">
+        <a href="{% url 'index' %}" class="text-muted hover:text-amber-500 text-[10px] font-black uppercase tracking-widest no-underline transition-colors">
+            ← Regresar a la Fortaleza Central
+        </a>
+    </div>
+</div>
+{% endblock %}

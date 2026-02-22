@@ -1,0 +1,323 @@
+<!-- PLANTILLA BASE (LAYOUT): Aquí se define la estructura que se repite en todas las páginas -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- El bloque title permite que cada página hija cambie el título de la pestaña -->
+    <title>{% block title %}The Silicon Citadel - Deep Hardware Records{% endblock %}</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="The Silicon Citadel: Un archivo profundo de hardware, manuales y registros técnicos inspirado en la estética de Dwarf Fortress. Encuentra artefactos tecnológicos y conocimiento prohibido.">
+    <meta name="keywords" content="hardware, manuales, drivers, dwarf fortress, tech archive, silicon citadel, reparación pc">
+    <meta name="author" content="Silicon Citadel Forge">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:title" content="The Silicon Citadel - Deep Hardware Records">
+    <meta property="og:description" content="Explora el archivo masivo de componentes y conocimiento técnico. Forjando el futuro con el eco del pasado.">
+    <meta property="og:image" content="{% static 'logo.jpg' %}">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="The Silicon Citadel - Deep Hardware Records">
+    <meta property="twitter:description" content="Un tributo al hardware y a la complejidad de Bay 12 Games.">
+    <meta property="twitter:image" content="{% static 'logo.jpg' %}">
+    
+    <!-- Importamos Tailwind para utilidades rápidas de diseño -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Importamos nuestro archivo de estilos personalizado -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- Favicon del sitio -->
+    <link rel="icon" type="image/jpeg" href="{% static 'favicon.jpg' %}">
+
+    <style>
+        /* Global Progress Bar */
+        #page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: var(--accent-primary);
+            z-index: 9999;
+            transition: width 0.4s ease;
+            box-shadow: 0 0 10px var(--accent-primary);
+        }
+    </style>
+</head>
+<body class="bg-bg-color text-main">
+    <div id="page-loader" aria-hidden="true"></div>
+    <!-- SECCIÓN: CABECERA (HEADER) - Contiene el logo, buscador y menú principal -->
+    <div class="header" role="navigation">
+        <div class="header-inner">
+            <!-- Fila superior: Título y controles -->
+            <div class="header-inner-top">
+                <a href="/" class="no-underline">
+                    <div class="logo-box">
+                        <div class="pixel-chip"></div>
+                        <h1 class="text-white">The Silicon Citadel</h1>
+                    </div>
+                </a>
+                <div class="flex gap-2 items-center">
+                    <!-- Toggle de Tema (SUPERFICIE / PROFUNDIDADES) -->
+                    <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar entre modo claro y oscuro">
+                        <span id="theme-toggle-icon" aria-hidden="true">⚒️</span>
+                        <span id="theme-toggle-text">PROFUNDIDADES</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Franja de texto descriptivo y estadísticas -->
+            <div class="text-sm font-bold uppercase tracking-widest text-yellow-600">
+                Strike the Silicon! • Reparaciones y Tecnología Enana
+            </div>
+
+            <!-- BARRA DE ESTADÍSTICAS PROPORCIONAL (Corner-to-corner) -->
+            <div class="stats-bar">
+                <!-- PC Consoles (Ejemplo: 35M visualizaciones -> flex: 35) -->
+                <a href="#" class="stat-item stat-books" style="flex: 35;">
+                    <span class="val">842</span> <span class="label">Computers</span>
+                </a>
+                <!-- Repairs (Ejemplo: 98M visualizaciones -> flex: 98) -->
+                <a href="#" class="stat-item stat-papers" style="flex: 80;">
+                    <span class="val">1.2k</span> <span class="label">Repairs</span>
+                </a>
+                <!-- Software (Ejemplo: 2M visualizaciones -> flex: 15) -->
+                <a href="#" class="stat-item stat-comics" style="flex: 15;">
+                    <span class="val">4.5k</span> <span class="label">Software</span>
+                </a>
+                <!-- Consoles (Ejemplo: 1M visualizaciones -> flex: 10) -->
+                <a href="#" class="stat-item stat-magazines" style="flex: 10;">
+                    <span class="val">215</span> <span class="label">Consoles</span>
+                </a>
+                <!-- Customers (Ejemplo: 5M visualizaciones -> flex: 20) -->
+                <a href="#" class="stat-item stat-software" style="flex: 20;">
+                    <span class="val">98%</span> <span class="label">Satis.</span>
+                </a>
+            </div>
+
+            <div class="text-xs mt-1 text-gray-500">🛠️ Hardware de Grado Maestro fabricado en las profundidades.</div>
+
+            <!-- MARQUESINA (RECENT DISPATCHES) -->
+            <div class="recent-downloads">
+                <div class="recent-downloads-label" style="background: #78350f !important;">⚒️ FORTRESS DISPATCHES</div>
+                <div class="recent-downloads-scroll font-bold">
+                    <span>&nbsp;•&nbsp;</span><a href="#">PC Masterwork: RTX 4090 Build</a>
+                    <span>&nbsp;•&nbsp;</span><a href="#">Reparación de PS5 (Líquido Térmico)</a>
+                    <span>&nbsp;•&nbsp;</span><a href="#">Update: Dragon OS v2.1</a>
+                    <span>&nbsp;•&nbsp;</span><a href="#">GPU Reflow exitoso en Sector 4</a>
+                    <span>&nbsp;•&nbsp;</span><a href="#">Mastering the Anvil: CPU Delid</a>
+                </div>
+            </div>
+
+            <!-- BARRA DE NAVEGACIÓN (HEADER BAR) -->
+            <div class="header-bar mt-2">
+                <div class="header-links">
+                    <a href="{% url 'index' %}" class="{% if request.resolver_match.url_name == 'index' %}header-link-active{% endif %}">🏠 Great Hall</a>
+                    <a href="{% url 'vault' %}" class="{% if request.resolver_match.url_name == 'vault' %}header-link-active{% endif %}">⚒️ Deep Delve</a>
+                    <a href="{% url 'categories' %}" class="{% if request.resolver_match.url_name == 'categories' %}header-link-active{% endif %}">📦 Provisión</a>
+                    <a href="{% url 'connect' %}" class="{% if request.resolver_match.url_name == 'connect' %}header-link-active{% endif %}">🍺 Tavern</a>
+                    <a href="{% url 'servicios' %}" class="{% if request.resolver_match.url_name == 'servicios' %}header-link-active{% endif %}">🛠️ Servicios</a>
+                    <a href="{% url 'donate' %}" class="{% if request.resolver_match.url_name == 'donate' %}header-link-active{% endif %}">💰 Tribute</a>
+
+                    <!-- Buscador inteligente en el header -->
+                    <div class="header-search-container hidden md:flex">
+                        <form action="{% url 'search_results' %}" method="get" class="flex items-center">
+                            <input name="q" type="text" placeholder="Buscar en la fortaleza..." class="header-search-input">
+                            <span class="header-search-icon">🔍</span>
+                        </form>
+                    </div>
+                </div>
+                <div class="hidden sm:flex ml-auto">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'profile' %}" class="header-utility-link">👤 Noble {{ user.username }}</a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="header-utility-link">🔒 Entrar Hall</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN PRINCIPAL: Contenedor compartido para el contenido y el menú lateral -->
+    <main class="main">
+        <!-- CONTENIDO DINÁMICO: Aquí es donde se inyecta el código de index.html o search.html -->
+        <div class="main-inner">
+            {% if messages %}
+            <div class="mb-6 space-y-2">
+                {% for message in messages %}
+                <div class="p-4 rounded-sm border {% if message.tags == 'success' %}bg-green-900/20 border-green-900/50 text-green-400{% elif message.tags == 'error' %}bg-red-900/20 border-red-900/50 text-red-400{% else %}bg-blue-900/20 border-blue-900/50 text-blue-400{% endif %} text-xs font-bold uppercase tracking-widest">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            {% block body %}{% endblock %}
+        </div>
+
+        <!-- MENÚ LATERAL (SIDEBAR): Dwarf Fortress Style -->
+        <div class="main-menu hidden sm:block">
+            <div class="sidebar-title">The Citadel</div>
+            <a href="{% url 'index' %}" class="sidebar-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}">🏠 Great Hall</a>
+            <a href="{% url 'vault' %}" class="sidebar-link {% if request.resolver_match.url_name == 'vault' %}active{% endif %}">⚒️ Deep Delve</a>
+            <a href="{% url 'connect' %}" class="sidebar-link {% if request.resolver_match.url_name == 'connect' %}active{% endif %}">🍺 Tavern</a>
+            <a href="{% url 'servicios' %}" class="sidebar-link {% if request.resolver_match.url_name == 'servicios' %}active{% endif %}">🛠️ Servicios</a>
+            <a href="{% url 'donate' %}" class="sidebar-link {% if request.resolver_match.url_name == 'donate' %}active{% endif %}">💰 Tribute</a>
+
+            <div class="sidebar-title">Noble Status</div>
+            {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}" class="sidebar-link">My Noble Page</a>
+                <a href="{% url 'logout' %}" class="sidebar-link">Leave the Hall</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="sidebar-link">Login</a>
+                <a href="{% url 'register' %}" class="sidebar-link">Join the Guard</a>
+            {% endif %}
+
+            <div class="sidebar-title">Records</div>
+            <a href="#" class="sidebar-link">Activity Logs</a>
+            <a href="{% url 'vault' %}" class="sidebar-link">Masterwork Index</a>
+            <a href="#" class="sidebar-link">Blueprints</a>
+        </div>
+    </main>
+
+    <!-- PIE DE PÁGINA (FOOTER) REIMAGINADO -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <!-- Columna Marca -->
+            <div class="footer-brand">
+                <div class="footer-logo italic uppercase tracking-tighter">The Silicon Citadel</div>
+                <p class="text-[11px] text-stone-500 font-mono uppercase leading-relaxed">
+                    Preservando los esquemas del silicio y la herencia técnica de los antiguos. Forjado bajo la montaña en 2026.
+                </p>
+                <div class="footer-social">
+                    <a href="#" title="Twitter" class="hover:text-amber-500 transition-colors">𝕏</a>
+                    <a href="#" title="Telegram" class="hover:text-amber-500 transition-colors">✈️</a>
+                    <a href="#" title="Reddit" class="hover:text-amber-500 transition-colors">🤖</a>
+                    <a href="#" title="GitHub" class="hover:text-amber-500 transition-colors">🐙</a>
+                </div>
+            </div>
+
+            <!-- Columna Navegación -->
+            <div class="footer-column">
+                <h4>Explorar</h4>
+                <ul class="footer-links">
+                    <li><a href="/">Inicio</a></li>
+                    <li><a href="/search">Buscador</a></li>
+                    <li><a href="#">Colecciones</a></li>
+                    <li><a href="#">Novedades</a></li>
+                </ul>
+            </div>
+
+            <!-- Columna Soporte -->
+            <div class="footer-column">
+                <h4>Ayuda</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Donaciones</a></li>
+                    <li><a href="#">Preguntas Frecuentes</a></li>
+                    <li><a href="#">Guía de Uso</a></li>
+                    <li><a href="#">Contacto</a></li>
+                </ul>
+            </div>
+
+            <!-- Columna de Tributo -->
+            <div class="footer-column flex flex-col items-center md:items-start">
+                <h4 class="mb-4">Inspiración</h4>
+                <a href="{% url 'tribute' %}" class="group block relative overflow-hidden rounded-sm border border-border-color/30 hover:border-amber-600/50 transition-all">
+                    <img src="{% static 'dwarf_fortress.jpg' %}" alt="Dwarf Fortress Tribute" class="w-full h-24 object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-2">
+                        <span class="text-[9px] font-black text-amber-500 uppercase tracking-widest">Strike the Earth</span>
+                    </div>
+                </a>
+                <p class="text-[9px] text-zinc-600 mt-3 italic leading-tight text-center md:text-left">
+                    Este sitio rinde homenaje a la legendaria obra de Bay 12 Games.
+                </p>
+            </div>
+        </div>
+
+        <div class="footer-bottom text-[10px] font-mono text-zinc-600 uppercase tracking-widest">
+            <div>© 2026 THE SILICON CITADEL. LICENCIA MAESTRA CC0.</div>
+            <div class="flex gap-4">
+                <a href="{% url 'privacidad' %}" class="footer-bottom-link">Privacidad</a>
+                <a href="{% url 'terminos' %}" class="footer-bottom-link">Términos</a>
+                <a href="{% url 'contacto' %}" class="footer-bottom-link">Contacto</a>
+            </div>
+        </div>
+    </footer>
+
+    <div id="back-to-top" class="back-to-top" title="Subir al Gran Salón">
+        <span>↑</span>
+    </div>
+
+    <script>
+        // Progress Bar Simulation
+        window.addEventListener('beforeunload', () => {
+            document.getElementById('page-loader').style.width = '30%';
+        });
+        
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('page-loader');
+            loader.style.width = '100%';
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.width = '0%';
+                    loader.style.opacity = '1';
+                }, 400);
+            }, 300);
+        });
+
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeToggleIcon = document.getElementById('theme-toggle-icon');
+        const themeToggleText = document.getElementById('theme-toggle-text');
+        const backToTop = document.getElementById('back-to-top');
+        const htmlElement = document.documentElement;
+
+        // Función para actualizar el botón
+        function updateToggleButton(theme) {
+            if (theme === 'light') {
+                themeToggleIcon.textContent = '☀️';
+                themeToggleText.textContent = 'SUPERFICIE';
+            } else {
+                themeToggleIcon.textContent = '⚒️';
+                themeToggleText.textContent = 'PROFUNDIDADES';
+            }
+        }
+
+        // Cargar preferencia guardada
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        htmlElement.setAttribute('data-theme', savedTheme);
+        updateToggleButton(savedTheme);
+
+        // Evento de clic para el tema
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateToggleButton(newTheme);
+        });
+
+        // Lógica para el botón de volver arriba
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+</body>
+</html>

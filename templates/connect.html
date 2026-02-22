@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Connect & Support - Forge & Chip{% endblock %}
+
+{% block body %}
+<div class="mb-12 text-center">
+    <h1 class="text-5xl font-black text-white uppercase italic tracking-tighter">🍺 The Tavern</h1>
+    <p class="text-yellow-600 font-bold uppercase tracking-widest text-xs">Comparte historias, forja alianzas.</p>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+    <!-- COLUMNA 1: TRABAJO (SIDEBAR) -->
+    <div class="card p-6 border-t-2 border-t-amber-600">
+        <div class="text-4xl mb-4">⚒️</div>
+        <h2 class="text-xl font-bold mb-4 uppercase italic">Código & Planos</h2>
+        <p class="text-sm text-gray-500 mb-6">The Silicon Citadel es 100% open source. Puedes colaborar mejorando la herrería digital o optimizando el silicio.</p>
+        <a href="#" class="btn-primary border border-amber-600/30 bg-amber-900/10 hover:bg-amber-800/20 block text-center py-3 text-[10px] font-black no-underline uppercase tracking-widest">CITADEL REPOSITORY</a>
+    </div>
+
+    <!-- COLUMNA 2: COMUNIDAD (CENTER) -->
+    <div class="card p-6 border-t-2 border-t-zinc-600">
+        <div class="text-4xl mb-4">📜</div>
+        <h2 class="text-xl font-bold mb-4 uppercase italic">El Concilio</h2>
+        <p class="text-sm text-gray-500 mb-6">Únete a nuestro Telegram o Discord para discutir sobre hardware antiguo, reparaciones maestras y planos de la ciudadela.</p>
+        <a href="#" class="btn-primary bg-zinc-800 hover:bg-zinc-700 block text-center py-3 text-[10px] font-black no-underline uppercase tracking-widest" style="background-color: #3f3f46 !important;">ENTRAR AL CONCILIO</a>
+    </div>
+
+    <!-- COLUMNA 3: DONAR (RIGHT) -->
+    <div class="card p-6 border-t-2 border-t-yellow-600">
+        <div class="text-4xl mb-4">💰</div>
+        <h2 class="text-xl font-bold mb-4 uppercase italic">El Tributo</h2>
+        <p class="text-sm text-gray-500 mb-6">No tenemos gremios comerciales ni anuncios. El mantenimiento de la herrería depende del tributo de los nobles.</p>
+        <a href="{% url 'donate' %}" class="btn-primary bg-yellow-700 hover:bg-yellow-600 block text-center py-3 text-[10px] font-black no-underline uppercase tracking-widest text-black" style="background-color: #d4af37 !important;">OFRECER TRIBUTO</a>
+    </div>
+</div>
+
+<div class="card bg-yellow-950/10 border-yellow-900/30 p-12 text-center">
+    <h3 class="text-2xl font-bold mb-4 italic uppercase tracking-tighter">¿Quieres unirte al Gremio?</h3>
+    <p class="text-gray-400 mb-8 max-w-xl mx-auto font-mono text-xs text-stone-500 uppercase">Buscamos maestros del soldador, expertos en recuperación de datos y archivistas de hardware.</p>
+    <a href="mailto:guild@siliconcitadel.li" class="link-custom text-lg font-black underline text-yellow-600">guild@siliconcitadel.li</a>
+</div>
+{% endblock %}

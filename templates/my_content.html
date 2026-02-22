@@ -1,0 +1,129 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }} - Forge & Chip{% endblock %}
+
+{% block body %}
+<style>
+    .delete-btn {
+        background: #dc2626;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: bold;
+        text-transform: uppercase;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .delete-btn:hover {
+        background: #b91c1c;
+    }
+    .edit-btn {
+        background: var(--accent-primary);
+        color: #000;
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: bold;
+        text-transform: uppercase;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s;
+    }
+    .edit-btn:hover {
+        background: #f59e0b;
+    }
+</style>
+
+<div class="max-w-5xl mx-auto py-12 px-4">
+    <div class="flex items-center gap-4 mb-8">
+        <a href="{% url 'profile' %}" class="text-amber-500 hover:text-amber-400 text-2xl">←</a>
+        <h1 class="text-3xl font-black text-main uppercase tracking-tighter" style="color: var(--text-main);">
+            ⚒️ {{ page_title }}
+        </h1>
+    </div>
+
+    {% if messages %}
+        <div class="mb-6">
+            {% for message in messages %}
+                <div class="p-4 rounded border {% if message.tags == 'success' %}bg-green-900/30 border-green-500 text-green-400{% else %}bg-red-900/30 border-red-500 text-red-400{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="card border-border-color shadow-2xl overflow-hidden" style="background-color: var(--card-bg);">
+        <table class="w-full">
+            <thead>
+                <tr class="border-b border-border-color" style="border-color: var(--border-color);">
+                    {% if content_type == "news" %}
+                    <th class="text-left p-4 text-[10px] font-black text-amber-500 uppercase tracking-widest">Título</th>
+                    <th class="text-left p-4 text-[10px] font-black text-amber-500 uppercase tracking-widest">Categoría</th>
+                    <th class="text-left p-4 text-[10px] font-black text-amber-500 uppercase tracking-widest">Fecha</th>
+                    <th class="text-right p-4 text-[10px] font-black text-amber-500 uppercase tracking-widest">Acciones</th>
+                    {% else %}
+                    <th class="text-left p-4 text-[10px] font-black text-amber-500 uppercase tracking-widest">Título</th>
+                    <th class="text-left p-4 text-[10px] font-black text-amber-500 uppercase tracking-widest">Autor</th>
+                    <th class="text-left p-4 text-[10px] font-black text-amber-500 uppercase tracking-widest">Fecha</th>
+                    <th class="text-right p-4 text-[10px] font-black text-amber-500 uppercase tracking-widest">Acciones</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% if content_type == "news" %}
+                    {% for news in news_items %}
+                    <tr class="border-b border-border-color/30 hover:bg-white/5" style="border-color: var(--border-color);">
+                        <td class="p-4">
+                            <a href="{% url 'news_detail' news.slug %}" class="text-main font-bold hover:text-amber-500 transition-colors" style="color: var(--text-main);">
+                                {{ news.title }}
+                            </a>
+                        </td>
+                        <td class="p-4 text-muted text-sm" style="color: var(--text-muted);">{{ news.category }}</td>
+                        <td class="p-4 text-muted text-sm" style="color: var(--text-muted);">{{ news.created_at|date:"d/m/Y" }}</td>
+                        <td class="p-4 text-right">
+                            <a href="{% url 'news_detail' news.slug %}" class="edit-btn">Ver</a>
+                            <a href="{% url 'edit_news' news.id %}" class="edit-btn" style="background: #3b82f6;">Editar</a>
+                            <form method="post" action="{% url 'delete_news' news.id %}" style="display: inline;" onsubmit="return confirm('¿Eliminar esta actualización?');">
+                                {% csrf_token %}
+                                <button type="submit" class="delete-btn">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="p-8 text-center text-muted">No hay actualizaciones publicadas aún.</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    {% for blog in blog_posts %}
+                    <tr class="border-b border-border-color/30 hover:bg-white/5" style="border-color: var(--border-color);">
+                        <td class="p-4">
+                            <a href="{% url 'blog_detail' blog.slug %}" class="text-main font-bold hover:text-amber-500 transition-colors" style="color: var(--text-main);">
+                                {{ blog.title }}
+                            </a>
+                        </td>
+                        <td class="p-4 text-muted text-sm" style="color: var(--text-muted);">{{ blog.author }}</td>
+                        <td class="p-4 text-muted text-sm" style="color: var(--text-muted);">{{ blog.date|date:"d/m/Y" }}</td>
+                        <td class="p-4 text-right">
+                            <a href="{% url 'blog_detail' blog.slug %}" class="edit-btn">Ver</a>
+                            <a href="{% url 'edit_blog' blog.id %}" class="edit-btn" style="background: #3b82f6;">Editar</a>
+                            <form method="post" action="{% url 'delete_blog' blog.id %}" style="display: inline;" onsubmit="return confirm('¿Eliminar este artículo?');">
+                                {% csrf_token %}
+                                <button type="submit" class="delete-btn">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="p-8 text-center text-muted">No hay artículos publicados aún.</td>
+                    </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

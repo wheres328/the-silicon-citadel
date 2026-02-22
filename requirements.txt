@@ -1,0 +1,18 @@
+# The Silicon Citadel - Dependencies
+# Django Framework
+Django>=4.2,<5.0
+
+# Image handling
+Pillow>=10.0
+
+# Production server
+gunicorn>=21.0
+
+# Database (if using PostgreSQL in production)
+# psycopg2-binary>=2.9
+
+# Static files
+whitenoise>=6.0
+
+# Django extensions (optional)
+django-debug-toolbar>=4.0

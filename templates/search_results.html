@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Resultados: {{ query }} - Silicon Citadel Forge{% endblock %}
+
+{% block body %}
+<div class="max-w-4xl mx-auto py-12 px-4">
+    <div class="mb-12 border-b border-border-color pb-8">
+        <div class="flex items-center gap-3 text-amber-600 font-mono text-[10px] uppercase tracking-[0.4em] mb-4">
+            <span class="w-1.5 h-1.5 bg-amber-600 rounded-full animate-pulse"></span>
+            Escaneo de los Anales Completado
+        </div>
+        <h1 class="text-4xl md:text-5xl font-black text-main italic uppercase tracking-tighter" style="color: var(--text-main);">
+            Resultados para: <span class="text-amber-500">"{{ query }}"</span>
+        </h1>
+    </div>
+
+    <div class="grid grid-cols-1 gap-12">
+        <!-- SECCIÓN DE NOTICIAS -->
+        <section>
+            <h2 class="text-[10px] font-black text-stone-500 uppercase tracking-[0.5em] mb-8 flex items-center gap-4">
+                Despachos del Sector 01
+                <span class="h-px bg-border-color flex-grow"></span>
+            </h2>
+            
+            <div class="space-y-4">
+                {% for item in news_results %}
+                <a href="{% url 'news_detail' item.slug %}" class="card group no-underline block p-6" style="background-color: var(--card-bg);">
+                    <div class="flex justify-between items-start gap-6">
+                        <div class="flex-grow">
+                            <span class="text-[9px] font-mono text-amber-600 uppercase tracking-widest mb-2 block">{{ item.category }}</span>
+                            <h3 class="text-xl font-bold text-main uppercase italic group-hover:text-amber-500 transition-colors mb-2" style="color: var(--text-main);">
+                                {{ item.title }}
+                            </h3>
+                            <p class="text-sm text-muted line-clamp-2 leading-relaxed" style="color: var(--text-muted);">
+                                {{ item.get_description }}
+                            </p>
+                        </div>
+                        <div class="text-[9px] font-mono text-zinc-600 uppercase shrink-0 pt-1">
+                            {{ item.created_at|date:"d M Y" }}
+                        </div>
+                    </div>
+                </a>
+                {% empty %}
+                <div class="py-12 text-center border border-dashed border-border-color rounded-sm opacity-40">
+                    <p class="text-xs uppercase font-bold text-muted">Silencio en los despachos del sector 01</p>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- SECCIÓN DE BLOG -->
+        <section>
+            <h2 class="text-[10px] font-black text-stone-500 uppercase tracking-[0.5em] mb-8 flex items-center gap-4">
+                Anales Maestros de la Forja
+                <span class="h-px bg-border-color flex-grow"></span>
+            </h2>
+            
+            <div class="space-y-4">
+                {% for post in blog_results %}
+                <a href="{% url 'blog_detail' post.slug %}" class="card group no-underline block p-8 border-l-4 border-l-amber-600" style="background-color: var(--card-bg);">
+                    <div class="flex items-center gap-6 mb-4">
+                        <div class="w-12 h-12 rounded-sm bg-stone-900 border border-border-color flex items-center justify-center text-xl grayscale group-hover:grayscale-0 transition-all">⚒️</div>
+                        <div>
+                            <h3 class="text-2xl font-black text-main uppercase italic group-hover:text-amber-500 transition-colors" style="color: var(--text-main);">
+                                {{ post.title }}
+                            </h3>
+                            <div class="text-[9px] font-mono text-stone-600 uppercase tracking-widest mt-1">
+                                Escrito por {{ post.author }} • {{ post.date|date:"F Y" }}
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-sm text-muted line-clamp-2 leading-relaxed opacity-70" style="color: var(--text-muted);">
+                        {{ post.get_description|truncatewords:30 }}
+                    </p>
+                </a>
+                {% empty %}
+                <div class="py-12 text-center border border-dashed border-border-color rounded-sm opacity-40">
+                    <p class="text-xs uppercase font-bold text-muted">No se han hallado fragmentos de sabiduría</p>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+
+    <!-- BOTÓN DE EXCAVACIÓN PROFUNDA -->
+    <div class="mt-20 pt-12 border-t border-border-color text-center">
+        <p class="text-[10px] font-black text-stone-500 uppercase tracking-widest mb-8">¿La búsqueda en la superficie no fue suficiente?</p>
+        <a href="{% url 'vault' %}?q={{ query }}" class="inline-flex items-center gap-4 px-10 py-5 bg-amber-700 hover:bg-amber-600 text-black font-black uppercase tracking-[0.2em] text-xs transition-all shadow-2xl no-underline rounded-sm">
+            <span>📡</span> Iniciar Excavación Profunda (Deep Delve)
+        </a>
+    </div>
+</div>
+{% endblock %}

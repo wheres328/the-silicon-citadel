@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Términos y Condiciones - The Silicon Citadel{% endblock %}
+
+{% block body %}
+<div class="max-w-4xl mx-auto py-12 px-4">
+    <h1 class="text-4xl font-black text-main uppercase tracking-tighter mb-8">Términos y Condiciones</h1>
+    
+    <div class="card p-8 border-border-color space-y-6" style="background-color: var(--card-bg);">
+        <p class="text-muted">Última actualización: {% now "d F Y" %}</p>
+        
+        <h2 class="text-xl font-black text-amber-500 uppercase">1. Aceptación de Términos</h2>
+        <p class="text-muted">Al acceder y utilizar este sitio web, aceptas cumplir con estos términos y condiciones.</p>
+
+        <h2 class="text-xl font-black text-amber-500 uppercase">2. Uso del Sitio</h2>
+        <p class="text-muted">Te comprometes a:</p>
+        <ul class="list-disc list-inside text-muted space-y-2">
+            <li>No utilizar el sitio para fines ilegales</li>
+            <li>No publicar contenido ofensivo o spam</li>
+            <li>No intentar acceder a cuentas de otros usuarios</li>
+            <li>Respetar a otros usuarios y administradores</li>
+        </ul>
+
+        <h2 class="text-xl font-black text-amber-500 uppercase">3. Cuentas de Usuario</h2>
+        <p class="text-muted">Eres responsable de mantener la confidencialidad de tu cuenta y contraseña.</p>
+
+        <h2 class="text-xl font-black text-amber-500 uppercase">4. Servicios de Desarrollo Web</h2>
+        <p class="text-muted">Los servicios de desarrollo web ofrecidos en este sitio están sujetos a los términos específicos acordados con el cliente.</p>
+
+        <h2 class="text-xl font-black text-amber-500 uppercase">5. Propiedad Intelectual</h2>
+        <p class="text-muted">Todo el contenido de este sitio es propiedad de The Silicon Citadel, salvo que se indique lo contrario.</p>
+
+        <h2 class="text-xl font-black text-amber-500 uppercase">6. Limitación de Responsabilidad</h2>
+        <p class="text-muted">No somos responsables de daños directos, indirectos o consecuentes derivados del uso de este sitio.</p>
+
+        <h2 class="text-xl font-black text-amber-500 uppercase">7. Modificaciones</h2>
+        <p class="text-muted">Nos reservamos el derecho de modificar estos términos en cualquier momento.</p>
+
+        <h2 class="text-xl font-black text-amber-500 uppercase">8. Contacto</h2>
+        <p class="text-muted">Para preguntas sobre estos términos, contáctanos en contacto@siliconcitadel.com</p>
+    </div>
+    
+    <div class="mt-8 text-center">
+        <a href="{% url 'index' %}" class="inline-block px-6 py-3 bg-amber-600 text-black font-black uppercase tracking-widest text-xs hover:bg-amber-500 rounded no-underline">Volver al Inicio</a>
+    </div>
+</div>
+{% endblock %}

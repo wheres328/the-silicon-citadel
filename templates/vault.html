@@ -1,0 +1,160 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}The Vault - Storage & Indexing{% endblock %}
+
+{% block body %}
+<!-- HEADER DE SECCIÓN -->
+<div class="mb-8">
+    <h1 class="text-4xl font-black text-main italic tracking-tighter uppercase" style="color: var(--text-main);">⚒️ The Deep Delve</h1>
+    <p class="text-muted text-base" style="color: var(--text-muted);">Registro masivo de artefactos y componentes. Recuperado de los estratos del silicio.</p>
+</div>
+
+<!-- BUSCADOR PRINCIPAL (REDISEÑADO) -->
+<div class="card p-12 border-yellow-900/40" style="background-color: var(--card-bg);">
+    <div class="max-w-2xl mx-auto text-center">
+        <h2 class="text-2xl font-bold mb-6 text-main italic uppercase tracking-widest" style="color: var(--text-main);">Strike the Data!</h2>
+        <form action="{% url 'vault' %}" method="get">
+            <div class="relative group">
+                <input name="q" type="search" value="{{ query }}" placeholder="Número de Serie, Modelo, Componente..." 
+                       class="w-full bg-white/5 border-2 border-white/10 px-6 py-4 rounded-sm text-lg text-main focus:border-yellow-600 outline-none transition-all focus:bg-white/10 pr-20 font-mono" style="color: var(--text-main);">
+                <button type="submit" class="absolute right-2 top-2 bottom-2 px-6 bg-yellow-700 hover:bg-yellow-600 text-black font-black rounded-sm transition-colors text-base uppercase tracking-tighter" style="background-color: #a16207 !important;">
+                    FORJAR
+                </button>
+            </div>
+        </form>
+        <div class="mt-4 flex flex-wrap justify-center gap-4 text-[12px] font-bold text-gray-500 uppercase tracking-widest">
+            <span class="hover:text-yellow-400 cursor-pointer"># Búsqueda de Artefactos</span>
+            <span class="hover:text-yellow-400 cursor-pointer"># Esquemas Técnicos</span>
+            <span class="hover:text-yellow-400 cursor-pointer"># Firmwares Antiguos</span>
+        </div>
+    </div>
+</div>
+
+{% if is_search %}
+<div class="mt-12 space-y-8">
+    <!-- SECCIÓN DE RELAYS EXTERNOS (REDIRECCIÓN) -->
+    <div class="card bg-stone-900/30 border-dashed border-amber-900/40 p-8">
+        <h3 class="text-sm font-black text-amber-600 uppercase tracking-[0.3em] mb-6 flex items-center gap-3">
+            <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+            </span>
+            Nodos de Retransmisión (External Search)
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Botón Relay: UserBenchmark -->
+            <a href="https://www.userbenchmark.com/Search?searchTerm={{ query }}" target="_blank" class="flex items-center gap-4 p-4 border border-white/5 hover:border-amber-600/50 transition-all rounded-sm no-underline group" style="background-color: var(--bg-color);">
+                <div class="text-2xl grayscale group-hover:grayscale-0 transition-all">📊</div>
+                <div>
+                    <div class="text-[12px] font-black text-main uppercase tracking-tighter" style="color: var(--text-main);">UserBenchmark</div>
+                    <div class="text-[11px] text-muted font-mono" style="color: var(--text-muted);">Comparar Rendimiento</div>
+                </div>
+            </a>
+            <!-- Botón Relay: DriverGuide -->
+            <a href="https://www.driverguide.com/driver/search.php?q={{ query }}" target="_blank" class="flex items-center gap-4 p-4 border border-white/5 hover:border-amber-600/50 transition-all rounded-sm no-underline group" style="background-color: var(--bg-color);">
+                <div class="text-2xl grayscale group-hover:grayscale-0 transition-all">💾</div>
+                <div>
+                    <div class="text-[12px] font-black text-main uppercase tracking-tighter" style="color: var(--text-main);">DriverGuide</div>
+                    <div class="text-[11px] text-muted font-mono" style="color: var(--text-muted);">Controladores & Drivers</div>
+                </div>
+            </a>
+            <!-- Botón Relay: TechPowerUp -->
+            <a href="https://www.techpowerup.com/gpu-specs/?q={{ query }}" target="_blank" class="flex items-center gap-4 p-4 border border-white/5 hover:border-amber-600/50 transition-all rounded-sm no-underline group" style="background-color: var(--bg-color);">
+                <div class="text-2xl grayscale group-hover:grayscale-0 transition-all">⚡</div>
+                <div>
+                    <div class="text-[12px] font-black text-main uppercase tracking-tighter" style="color: var(--text-main);">TechPowerUp</div>
+                    <div class="text-[11px] text-muted font-mono" style="color: var(--text-muted);">Base de Datos de GPUs</div>
+                </div>
+            </a>
+            <!-- Botón Relay: PCPartPicker -->
+            <a href="https://pcpartpicker.com/search/?q={{ query }}" target="_blank" class="flex items-center gap-4 p-4 border border-white/5 hover:border-amber-600/50 transition-all rounded-sm no-underline group" style="background-color: var(--bg-color);">
+                <div class="text-2xl grayscale group-hover:grayscale-0 transition-all">🏗️</div>
+                <div>
+                    <div class="text-[12px] font-black text-main uppercase tracking-tighter" style="color: var(--text-main);">PCPartPicker</div>
+                    <div class="text-[11px] text-muted font-mono" style="color: var(--text-muted);">Precios & Compatibilidad</div>
+                </div>
+            </a>
+            <!-- Botón Relay: YouTube (Tutoriales) -->
+            <a href="https://www.youtube.com/results?search_query=reparar+{{ query }}" target="_blank" class="flex items-center gap-4 p-4 border border-white/5 hover:border-amber-600/50 transition-all rounded-sm no-underline group" style="background-color: var(--bg-color);">
+                <div class="text-2xl grayscale group-hover:grayscale-0 transition-all">🔧</div>
+                <div>
+                    <div class="text-[12px] font-black text-main uppercase tracking-tighter" style="color: var(--text-main);">Guías de Forja</div>
+                    <div class="text-[11px] text-muted font-mono" style="color: var(--text-muted);">Tutoriales de Reparación</div>
+                </div>
+            </a>
+            <!-- Botón Relay: Google (Info General) -->
+            <a href="https://www.google.com/search?q={{ query }}+specs+drivers" target="_blank" class="flex items-center gap-4 p-4 border border-white/5 hover:border-amber-600/50 transition-all rounded-sm no-underline group" style="background-color: var(--bg-color);">
+                <div class="text-2xl grayscale group-hover:grayscale-0 transition-all">🌐</div>
+                <div>
+                    <div class="text-[12px] font-black text-main uppercase tracking-tighter" style="color: var(--text-main);">Consulta Universal</div>
+                    <div class="text-[11px] text-muted font-mono" style="color: var(--text-muted);">Búsqueda en la Superficie</div>
+                </div>
+            </a>
+        </div>
+        <p class="mt-6 text-[11px] font-mono text-stone-600 uppercase text-center tracking-widest">
+            * Estos enlaces abren puertas a nodos externos a la fortaleza. Procede con cautela, archivista.
+        </p>
+    </div>
+
+    <h3 class="text-base font-bold text-gray-500 uppercase flex items-center gap-4">
+        <span class="h-px bg-white/5 flex-grow"></span>
+        Registros Locales encontrados
+        <span class="h-px bg-white/5 flex-grow"></span>
+    </h3>
+    
+    <!-- RESULTADOS INTERNOS SIMULADOS -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="card p-6 border-l-4 border-l-amber-800" style="background-color: var(--card-bg);">
+            <div class="flex gap-4">
+                <div class="w-16 h-20 bg-stone-900/40 flex-shrink-0 flex items-center justify-center text-[8px] text-muted border border-white/5 font-mono">ARTIFACT</div>
+                <div class="flex-grow">
+                    <a href="#" class="text-lg font-bold text-main hover:text-yellow-400 no-underline block mb-1" style="color: var(--text-main);">{{ query }} - Master Manual</a>
+                    <div class="text-[10px] text-gray-400 mb-2">
+                        <span class="font-black text-amber-600">PDF</span> • 4.2 MB • Ver: 2026
+                    </div>
+                    <div class="text-[9px] text-gray-500 font-mono truncate">ID: Citadel-X-{{ query|slice:":3" }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="card p-6 border-l-4 border-l-zinc-800" style="background-color: var(--card-bg);">
+            <div class="flex gap-4">
+                <div class="w-16 h-20 bg-stone-900/40 flex-shrink-0 flex items-center justify-center text-[8px] text-muted border border-white/5 font-mono">BLUEPRINT</div>
+                <div class="flex-grow">
+                    <a href="#" class="text-lg font-bold text-main hover:text-yellow-400 no-underline block mb-1" style="color: var(--text-main);">Technical Spec: {{ query }}</a>
+                    <div class="text-[10px] text-gray-400 mb-2">
+                        <span class="font-black text-blue-600">IMG</span> • 1.2 MB • Verified
+                    </div>
+                    <div class="text-[9px] text-gray-500 font-mono truncate">S/N: DF-{{ query|slice:":4" }}-842</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Simulated Loading Record -->
+        <div class="card p-6 border-l-4 border-l-amber-600/20 opacity-60" style="background-color: var(--card-bg);">
+            <div class="flex gap-4">
+                <div class="w-16 h-20 skeleton flex-shrink-0"></div>
+                <div class="flex-grow space-y-3">
+                    <div class="h-4 w-3/4 skeleton"></div>
+                    <div class="h-3 w-1/2 skeleton opacity-50"></div>
+                    <div class="h-2 w-1/4 skeleton opacity-30"></div>
+                </div>
+            </div>
+            <div class="mt-4 text-[8px] font-mono text-amber-600 animate-pulse text-center uppercase tracking-widest">Sincronizando con estratos inferiores...</div>
+        </div>
+    </div>
+</div>
+{% else %}
+<!-- INFO EXTRA CUANDO NO HAY BÚSQUEDA -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
+    <div class="card bg-yellow-950/5">
+        <h3 class="font-bold mb-2">⚒️ Cargamentos Masivos</h3>
+        <p class="text-sm text-gray-500">Puedes descargar manuales y firmwares completos a través de nuestros torrents de la fortaleza. Strike the earth!</p>
+    </div>
+    <div class="card bg-gray-900/20">
+        <h3 class="font-bold mb-2">⚙️ API Pública</h3>
+        <p class="text-sm text-gray-500">Integra nuestro buscador en tus propios proyectos. Documentación disponible en el repositorio de GitHub.</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

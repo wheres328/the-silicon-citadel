@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Resolver Reporte - The Silicon Citadel{% endblock %}
+
+{% block body %}
+<div class="max-w-2xl mx-auto py-12 px-4">
+    <div class="flex items-center gap-4 mb-8">
+        <a href="{% url 'mod_panel' %}" class="text-amber-500 hover:text-amber-400 text-2xl">←</a>
+        <h1 class="text-2xl font-black text-main uppercase tracking-tighter" style="color: var(--text-main);">
+            📋 Resolver Reporte
+        </h1>
+    </div>
+
+    <div class="mod-card">
+        <div class="mb-4">
+            <span class="text-[10px] text-muted uppercase tracking-widest">Tipo de Reporte</span>
+            <div class="text-lg font-bold text-amber-500">{{ report.get_report_type_display }}</div>
+        </div>
+        
+        <div class="mb-4">
+            <span class="text-[10px] text-muted uppercase tracking-widest">Reportado por</span>
+            <div class="text-main font-bold" style="color: var(--text-main);">{{ report.reporter.username }}</div>
+        </div>
+        
+        <div class="mb-4">
+            <span class="text-[10px] text-muted uppercase tracking-widest">Contenido del Reporte</span>
+            <div class="p-4 bg-black/20 rounded border border-border-color text-main" style="color: var(--text-main);">
+                {{ report.content }}
+            </div>
+        </div>
+        
+        {% if report.comment %}
+        <div class="mb-4">
+            <span class="text-[10px] text-muted uppercase tracking-widest">Comentario Reportado</span>
+            <div class="p-4 bg-black/20 rounded border border-border-color text-main" style="color: var(--text-main);">
+                {{ report.comment.content }}
+            </div>
+        </div>
+        {% endif %}
+        
+        {% if report.reported_user %}
+        <div class="mb-4">
+            <span class="text-[10px] text-muted uppercase tracking-widest">Usuario Reportado</span>
+            <div class="flex items-center gap-4">
+                <span class="text-main font-bold" style="color: var(--text-main);">{{ report.reported_user.username }}</span>
+                <a href="{% url 'ban_user' report.reported_user.id %}" class="px-4 py-2 bg-red-700 text-white text-[10px] font-bold uppercase rounded">Banear Usuario</a>
+            </div>
+        </div>
+        {% endif %}
+        
+        <form method="post" class="mt-8">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label class="text-[10px] text-muted uppercase tracking-widest block mb-2">Notas de Resolución</label>
+                <textarea name="notes" rows="4" class="w-full p-4 bg-black/20 border border-border-color rounded text-main" style="color: var(--text-main);" placeholder="Notas sobre la resolución..."></textarea>
+            </div>
+            
+            <div class="flex gap-4">
+                <button type="submit" name="action" value="resolve" class="flex-1 py-4 bg-green-600 text-white font-black uppercase tracking-widest text-[11px] rounded hover:bg-green-500">
+                    ✅ Resolver Reporte
+                </button>
+                <button type="submit" name="action" value="dismiss" class="flex-1 py-4 bg-gray-600 text-white font-black uppercase tracking-widest text-[11px] rounded hover:bg-gray-500">
+                    Descartar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .mod-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 20px;
+    }
+</style>
+{% endblock %}

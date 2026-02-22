@@ -1,0 +1,237 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}{{ post.title }} - Masterwork Logs{% endblock %}
+
+{% block body %}
+<style>
+#blog-content h1, #blog-content h2, #blog-content h3 { color: var(--text-main); margin: 1.5em 0 0.5em; font-weight: bold; }
+#blog-content h1 { font-size: 2em; }
+#blog-content h2 { font-size: 1.5em; color: #10b981; }
+#blog-content h3 { font-size: 1.25em; }
+#blog-content p { margin: 1em 0; line-height: 1.8; }
+#blog-content strong, #blog-content b { color: #10b981; font-weight: bold; }
+#blog-content em, #blog-content i { font-style: italic; }
+#blog-content ul, #blog-content ol { padding-left: 1.5em; margin: 1em 0; }
+#blog-content li { margin: 0.5em 0; }
+#blog-content blockquote { border-left: 4px solid #10b981; padding-left: 1em; margin: 1em 0; color: var(--text-muted); font-style: italic; }
+#blog-content code { background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 2px 6px; border-radius: 3px; font-family: monospace; }
+#blog-content pre { background: #1a1a15; padding: 12px; border-radius: 6px; overflow-x: auto; margin: 1em 0; }
+#blog-content pre code { background: none; color: #a5b4fc; padding: 0; }
+#blog-content a { color: #10b981; text-decoration: underline; }
+#blog-content img { max-width: 100%; border-radius: 6px; margin: 1em 0; }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.2/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const contentEl = document.getElementById('blog-content');
+    if (contentEl) {
+        const rawText = contentEl.textContent;
+        const dirtyHTML = marked.parse(rawText);
+        contentEl.innerHTML = DOMPurify.sanitize(dirtyHTML);
+    }
+});
+</script>
+<div class="max-w-3xl mx-auto py-12 px-4">
+    <!-- MASTERWORK ARTICLE -->
+    <article class="relative">
+        
+        <!-- Decoration Elements (Subtle) -->
+        <div class="absolute -left-12 top-0 bottom-0 w-px bg-gradient-to-b from-amber-600/30 via-transparent to-transparent hidden lg:block"></div>
+        
+        <!-- Header Section -->
+        <header class="text-center mb-16">
+            <div class="inline-flex items-center justify-center gap-3 text-[12px] font-black text-amber-600 uppercase tracking-[0.4em] mb-6">
+                <span class="h-px w-8 bg-amber-600/30"></span>
+                Masterwork Log
+                <span class="h-px w-8 bg-amber-600/30"></span>
+            </div>
+            
+            <h1 class="text-5xl md:text-6xl font-black text-main uppercase tracking-tighter italic leading-none mb-8" style="color: var(--text-main);">
+                {{ post.title }}
+            </h1>
+
+            {% if user.is_authenticated %}
+            <div class="flex justify-center mb-8">
+                <form action="{% url 'toggle_bookmark' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="item_type" value="blog">
+                    <input type="hidden" name="item_id" value="{{ post.id }}">
+                    <button type="submit" class="flex items-center gap-3 px-6 py-2 border border-border-color rounded-sm hover:border-amber-600 transition-all text-[12px] font-black uppercase tracking-widest text-muted hover:text-main" style="border-color: var(--border-color); color: var(--text-muted);">
+                        {% if post.id in user_bookmarks %}
+                        <span class="text-lg">🔖</span> RECLAMADO EN ANALES
+                        {% else %}
+                        <span class="text-lg">📖</span> RECLAMAR ARTEFACTO
+                        {% endif %}
+                    </button>
+                </form>
+            </div>
+            {% endif %}
+            
+            <div class="flex flex-wrap items-center justify-center gap-6 text-[13px] font-mono text-stone-500 uppercase tracking-widest">
+                <div class="flex items-center gap-3 py-2 px-4 bg-stone-900/50 rounded-full border border-border-color">
+                    <span class="text-amber-500">⚒️ Maestro:</span>
+                    <span class="text-main font-black" style="color: var(--text-main);">{{ post.author }}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-stone-700 italic">Fecha de Forja:</span>
+                    <span class="text-stone-400">{{ post.date|date:"d M Y" }}</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Article Content -->
+        <section class="prose prose-invert max-w-none mb-20">
+            <div id="blog-content" class="text-main leading-[1.8] space-y-8 content-display" style="color: var(--text-main); font-size: 1.25rem; font-family: 'Inter', sans-serif;">
+                {{ post.content|linebreaks }}
+            </div>
+        </section>
+
+        <!-- Author Seal & Footer -->
+        <footer class="border-t border-border-color pt-12">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+                <!-- Seal -->
+                <div class="flex items-center gap-6">
+                    <div class="w-16 h-16 rounded-sm border-2 border-amber-600/20 rotate-45 flex items-center justify-center bg-amber-600/5 group">
+                        <span class="text-2xl -rotate-45 opacity-50 group-hover:opacity-100 transition-opacity">⚒️</span>
+                    </div>
+                    <div>
+                        <h4 class="text-[12px] font-black text-main uppercase tracking-widest" style="color: var(--text-main);">Validado por la Ciudadela</h4>
+                        <p class="text-[11px] text-stone-600 font-mono italic uppercase">Sello de autenticidad No. {{ post.id }} - Master Rank</p>
+                    </div>
+                </div>
+
+                <!-- Navigation & Sharing -->
+                <div class="flex items-center gap-6">
+                    <div class="flex gap-2">
+                        <a href="#" class="w-10 h-10 flex items-center justify-center border border-border-color text-muted transition-all no-underline text-lg rounded-sm" style="border-color: var(--border-color); color: var(--text-muted); background-color: transparent;" onmouseover="this.style.backgroundColor='var(--hover-bg)'; this.style.color='var(--text-main)'" onmouseout="this.style.backgroundColor='transparent'; this.style.color='var(--text-muted)'">𝕏</a>
+                        <a href="#" class="w-10 h-10 flex items-center justify-center border border-border-color text-muted transition-all no-underline text-lg rounded-sm" style="border-color: var(--border-color); color: var(--text-muted); background-color: transparent;" onmouseover="this.style.backgroundColor='var(--hover-bg)'; this.style.color='var(--text-main)'" onmouseout="this.style.backgroundColor='transparent'; this.style.color='var(--text-muted)'">✈️</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-16 flex justify-center">
+                <a href="{% url 'index' %}" class="px-8 py-3 border border-border-color text-muted transition-all shadow-sm text-[12px] font-black uppercase tracking-widest rounded-sm no-underline flex items-center gap-3" style="border-color: var(--border-color); color: var(--text-muted); background-color: transparent;" onmouseover="this.style.backgroundColor='var(--hover-bg)'; this.style.color='var(--text-main)'" onmouseout="this.style.backgroundColor='transparent'; this.style.color='var(--text-muted)'">
+                    <span>←</span> Volver a los Anales Centrales
+                </a>
+            </div>
+        </footer>
+
+        <!-- SECCIÓN DE COMENTARIOS: COMMUNE WITH THE FORGE (BLOG STYLE) -->
+        <div class="mt-24 pt-16 border-t border-border-color max-w-2xl mx-auto">
+            <h3 class="text-xl font-black text-main uppercase italic mb-12 text-center" style="color: var(--text-main);">
+                Debates de la Forja
+            </h3>
+
+            <!-- Formulario -->
+            <div class="mb-16">
+            <!-- Formulario -->
+            {% if user.is_authenticated %}
+            <div class="mb-16">
+                <form action="{% url 'add_comment' %}" method="post" class="flex flex-col gap-4">
+                    {% csrf_token %}
+                    <input type="hidden" name="item_type" value="blog">
+                    <input type="hidden" name="item_id" value="{{ post.id }}">
+                    <textarea name="content" required placeholder="¿Qué sabiduría compartirás hoy?" class="w-full bg-stone-900/10 border border-border-color p-4 rounded-sm text-main placeholder-stone-600 font-mono text-sm resize-none h-32 focus:border-amber-600 outline-none transition-all" style="color: var(--text-main);"></textarea>
+                    <button type="submit" class="w-full py-4 bg-amber-700 hover:bg-amber-600 text-black text-[12px] font-black uppercase tracking-widest transition-all rounded-sm">
+                        GRABAR EN LOS ANALES
+                    </button>
+                </form>
+            </div>
+            {% else %}
+            <div class="mb-16 py-8 text-center border-y border-dashed border-border-color opacity-50">
+                <p class="text-[12px] font-black uppercase tracking-widest">
+                    Inicia sesión para grabar tus pensamientos en estos anales.
+                </p>
+            </div>
+            {% endif %}
+
+            <!-- Lista de Comentarios Reales -->
+            <div class="space-y-12">
+                {% for comment in comments %}
+                <div class="relative pl-8 border-l {% if comment.user.is_staff %}border-amber-600{% else %}border-stone-700{% endif %}">
+                    <div class="absolute -left-[5px] top-0 w-2 h-2 {% if comment.user.is_staff %}bg-amber-600{% else %}bg-stone-700{% endif %} rounded-full"></div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-xs font-black {% if comment.user.is_staff %}text-amber-500{% else %}text-main{% endif %} uppercase tracking-widest" {% if not comment.user.is_staff %}style="color: var(--text-main);"{% endif %}>
+                            {{ comment.user.username }}
+                        </span>
+                        {% if comment.user.is_staff %}
+                        <span class="px-1.5 py-0.5 border border-amber-600 text-[10px] font-black text-amber-600 rounded-sm">MAESTRO</span>
+                        {% endif %}
+                    </div>
+                    <p class="text-base text-muted leading-relaxed" style="color: var(--text-muted);">
+                        {{ comment.content }}
+                    </p>
+                    <div class="mt-4 flex gap-6 items-center italic text-[12px] text-stone-600">
+                        <span>Registro: {{ comment.created_at|date:"d/m/Y - H:i" }}</span>
+                        {% if user.is_authenticated and user != comment.user %}
+                        <button onclick="toggleReport({{ comment.id }})" class="hover:text-red-500">Reportar</button>
+                        <div id="report-{{ comment.id }}" class="hidden mt-2 p-3 bg-black/40 rounded border border-border-color">
+                            <form action="{% url 'create_report' %}" method="post" class="flex gap-2">
+                                {% csrf_token %}
+                                <input type="hidden" name="comment_id" value="{{ comment.id }}">
+                                <select name="report_type" class="text-xs p-1 bg-black/60 border border-border-color rounded text-main">
+                                    <option value="spam">Spam</option>
+                                    <option value="inappropriate">Inapropiado</option>
+                                    <option value="harassment">Acoso</option>
+                                    <option value="other">Otro</option>
+                                </select>
+                                <input type="text" name="content" placeholder="Motivo..." class="text-xs p-1 bg-black/60 border border-border-color rounded text-main flex-1" required>
+                                <button type="submit" class="text-[10px] bg-red-700 text-white px-2 py-1 rounded uppercase">Enviar</button>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% empty %}
+                <div class="py-12 text-center opacity-30">
+                    <p class="text-[12px] font-black uppercase tracking-widest">Nadie ha reclamado este espacio todavía.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </article>
+
+    <!-- Botones de Editar/Eliminar para usuarios con permisos -->
+    {% if can_edit or can_delete %}
+    <div class="flex justify-end gap-4 mt-6">
+        {% if can_edit %}
+        <a href="{% url 'edit_blog' post.id %}" class="px-6 py-3 bg-amber-600 text-black text-[11px] font-black uppercase tracking-widest hover:bg-amber-500 transition-colors rounded-sm shadow-lg no-underline">
+            ✏️ EDITAR
+        </a>
+        {% endif %}
+        {% if can_delete %}
+        <form method="post" action="{% url 'delete_blog_public' post.id %}" onsubmit="return confirm('¿Estás seguro de eliminar este artículo?');">
+            {% csrf_token %}
+            <button type="submit" class="px-6 py-3 bg-red-700 text-white text-[11px] font-black uppercase tracking-widest hover:bg-red-600 transition-colors rounded-sm shadow-lg">
+                🗑️ ELIMINAR
+            </button>
+        </form>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    /* Estilos adicionales para mejorar la lectura */
+    article .prose p {
+        margin-bottom: 2rem;
+    }
+    article .prose blockquote {
+        border-left: 4px solid var(--accent-primary);
+        padding-left: 2rem;
+        font-style: italic;
+        color: var(--text-muted);
+        background: rgba(var(--accent-primary-rgb), 0.05);
+        padding: 2rem;
+        border-radius: 0 4px 4px 0;
+    }
+</style>
+<script>
+function toggleReport(commentId) {
+    const reportDiv = document.getElementById('report-' + commentId);
+    reportDiv.classList.toggle('hidden');
+}
+</script>
+{% endblock %}

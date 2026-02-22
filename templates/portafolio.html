@@ -1,0 +1,133 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Portafolio - The Silicon Citadel{% endblock %}
+
+{% block body %}
+<style>
+    .portfolio-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s;
+    }
+    .portfolio-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        border-color: var(--accent-primary);
+    }
+    .portfolio-img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    }
+    .testimonial-card {
+        background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, transparent 100%);
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        border-radius: 12px;
+        padding: 24px;
+    }
+    .stars { color: #d4af37; }
+</style>
+
+<div class="max-w-7xl mx-auto py-12 px-4">
+    <!-- Header -->
+    <div class="text-center mb-16">
+        <div class="inline-block px-4 py-2 bg-amber-600/20 border border-amber-600/30 rounded-full mb-6">
+            <span class="text-amber-500 text-xs font-black uppercase tracking-widest">Proyectos Realizados</span>
+        </div>
+        <h1 class="text-5xl md:text-6xl font-black text-main uppercase tracking-tighter mb-6">
+            Mi Portafolio
+        </h1>
+        <p class="text-xl text-muted max-w-2xl mx-auto">
+            Trabajos realizados para clientes satisfechos. ¡Impulsa tu negocio como ellos!
+        </p>
+    </div>
+
+    <!-- Trabajos -->
+    <div class="mb-20">
+        <h2 class="text-2xl font-black text-main uppercase mb-8">Proyectos Destacados</h2>
+        
+        {% if trabajos %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for trabajo in trabajos %}
+            <div class="portfolio-card">
+                {% if trabajo.imagen %}
+                <img src="{{ trabajo.imagen.url }}" alt="{{ trabajo.titulo }}" class="portfolio-img">
+                {% else %}
+                <div class="portfolio-img flex items-center justify-center text-6xl">🖥️</div>
+                {% endif %}
+                <div class="p-6">
+                    <div class="text-xs text-amber-500 uppercase tracking-widest mb-2">
+                        {{ trabajo.get_categoria_display }}
+                    </div>
+                    <h3 class="text-lg font-black text-main uppercase mb-2">{{ trabajo.titulo }}</h3>
+                    <p class="text-sm text-muted mb-4">{{ trabajo.descripcion|truncatewords:20 }}</p>
+                    {% if trabajo.cliente %}
+                    <p class="text-xs text-muted">Cliente: {{ trabajo.cliente }}</p>
+                    {% endif %}
+                    {% if trabajo.url %}
+                    <a href="{{ trabajo.url }}" target="_blank" class="inline-block mt-4 px-4 py-2 bg-amber-600 text-black text-xs font-black uppercase tracking-widest rounded hover:bg-amber-500 no-underline">
+                        Ver Proyecto →
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-16 card border-border-color" style="background-color: var(--card-bg);">
+            <div class="text-6xl mb-4">🚧</div>
+            <p class="text-muted">Aún no hay proyectos publicados.</p>
+            <p class="text-sm text-muted mt-2">¡Pronto añadiremos trabajos!</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Testimonios -->
+    <div class="mb-20">
+        <h2 class="text-2xl font-black text-main uppercase mb-8">Lo que dicen mis clientes</h2>
+        
+        {% if testimonios %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {% for t in testimonios %}
+            <div class="testimonial-card">
+                <div class="flex items-center gap-1 mb-4">
+                    {% for i in "12345"|make_list %}
+                    <span class="stars">★</span>
+                    {% endfor %}
+                </div>
+                <p class="text-main mb-4 italic">"{{ t.mensaje }}"</p>
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-full bg-amber-600/20 flex items-center justify-center text-xl">
+                        {{ t.nombre|slice:1 }}
+                    </div>
+                    <div>
+                        <div class="font-bold text-main">{{ t.nombre }}</div>
+                        {% if t.empresa %}
+                        <div class="text-xs text-muted">{{ t.empresa }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-12 card border-border-color" style="background-color: var(--card-bg);">
+            <p class="text-muted">Aún no hay testimonios.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- CTA -->
+    <div class="text-center py-12 card border-amber-600/30" style="background-color: var(--card-bg);">
+        <h2 class="text-2xl font-black text-main uppercase mb-4">¿Quieres ser el próximo?</h2>
+        <p class="text-muted mb-8">Contáctame y hagamos realidad tu proyecto.</p>
+        <a href="{% url 'servicios' %}" class="inline-block px-8 py-4 bg-amber-600 text-black font-black uppercase tracking-widest hover:bg-amber-500 rounded no-underline">
+            Ver Servicios
+        </a>
+    </div>
+</div>
+{% endblock %}

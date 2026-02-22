@@ -1,0 +1,196 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Servicios - The Silicon Citadel{% endblock %}
+
+{% block body %}
+<style>
+    .paquete-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 32px;
+        transition: all 0.3s;
+    }
+    .paquete-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+    .paquete-bronze { border-color: #cd7f32; }
+    .paquete-silver { border-color: #c0c0c0; }
+    .paquete-gold { border-color: #d4af37; }
+    
+    .paquete-bronze:hover { border-color: #e8a748; }
+    .paquete-silver:hover { border-color: #e0e0e0; }
+    .paquete-gold:hover { border-color: #f0c850; }
+    
+    .precio {
+        font-size: 2.5rem;
+        font-weight: 900;
+    }
+    .paquete-bronze .precio { color: #cd7f32; }
+    .paquete-silver .precio { color: #c0c0c0; }
+    .paquete-gold .precio { color: #d4af37; }
+    
+    .check-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .check-item:last-child { border-bottom: none; }
+    .check-icon {
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-size: 12px;
+    }
+    .paquete-bronze .check-icon { background: rgba(205, 127, 50, 0.2); color: #cd7f32; }
+    .paquete-silver .check-icon { background: rgba(192, 192, 192, 0.2); color: #c0c0c0; }
+    .paquete-gold .check-icon { background: rgba(212, 175, 55, 0.2); color: #d4af37; }
+    
+    .cta-btn {
+        display: inline-block;
+        width: 100%;
+        padding: 16px 32px;
+        text-align: center;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        border-radius: 8px;
+        transition: all 0.3s;
+        text-decoration: none;
+    }
+    .paquete-bronze .cta-btn { background: #cd7f32; color: #000; }
+    .paquete-bronze .cta-btn:hover { background: #e8a748; }
+    .paquete-silver .cta-btn { background: linear-gradient(135deg, #c0c0c0 0%, #a0a0a0 100%); color: #000; }
+    .paquete-silver .cta-btn:hover { background: linear-gradient(135deg, #e0e0e0 0%, #c0c0c0 100%); }
+    .paquete-gold .cta-btn { background: linear-gradient(135deg, #d4af37 0%, #b8962e 100%); color: #000; }
+    .paquete-gold .cta-btn:hover { background: linear-gradient(135deg, #f0c850 0%, #d4af37 100%); }
+    
+    .mantenimiento-card {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        border: 2px solid #00d9ff;
+        border-radius: 12px;
+        padding: 32px;
+    }
+    
+    .hero-text {
+        background: linear-gradient(90deg, #d4af37, #f0c850, #d4af37);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+</style>
+
+<div class="max-w-7xl mx-auto py-12 px-4">
+    <!-- Header -->
+    <div class="text-center mb-16">
+        <div class="inline-block px-4 py-2 bg-amber-600/20 border border-amber-600/30 rounded-full mb-6">
+            <span class="text-amber-500 text-xs font-black uppercase tracking-widest">Servicios Profesionales</span>
+        </div>
+        <h1 class="text-5xl md:text-6xl font-black text-main uppercase tracking-tighter mb-6 hero-text">
+            Transforma Tu Negocio
+        </h1>
+        <p class="text-xl text-muted max-w-2xl mx-auto">
+            Sitios web profesionales, tiendas online y soluciones digitales adaptadas a tu presupuesto.
+        </p>
+    </div>
+
+    <!-- Paquetes -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+        {% for paquete in paquetes %}
+        <div class="paquete-card paquete-{{ paquete.color }}">
+            <div class="text-center mb-6">
+                <div class="text-4xl mb-2">{{ paquete.badge }}</div>
+                <h3 class="text-2xl font-black text-main uppercase">{{ paquete.nombre }}</h3>
+                <div class="precio mt-4">{{ paquete.precio }}</div>
+            </div>
+            
+            <p class="text-muted text-center mb-6">{{ paquete.descripcion }}</p>
+            
+            <div class="mb-6">
+                {% for item in paquete.incluye %}
+                <div class="check-item">
+                    <span class="check-icon">✓</span>
+                    <span class="text-sm text-main">{{ item }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="text-center pt-4 border-t border-border-color">
+                <p class="text-xs text-muted mb-4">Perfecto para: {{ paquete.perfecto_para }}</p>
+                <a href="https://wa.me/1XXXXXXXXXX?text=Hola,%20me%20interesa%20el%20{{ paquete.nombre }}" 
+                   target="_blank"
+                   class="cta-btn">
+                    Solicitar Ahora
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Mantenimiento -->
+    <div class="max-w-3xl mx-auto">
+        <div class="mantenimiento-card text-center">
+            <div class="text-4xl mb-4">🔄</div>
+            <h3 class="text-2xl font-black text-cyan-400 uppercase mb-2">{{ mantenimiento.nombre }}</h3>
+            <div class="text-3xl font-black text-cyan-400 mb-4">{{ mantenimiento.precio }}</div>
+            <p class="text-muted mb-6">{{ mantenimiento.descripcion }}</p>
+            
+            <div class="grid grid-cols-2 gap-4 mb-8 text-left max-w-xl mx-auto">
+                {% for item in mantenimiento.incluye %}
+                <div class="check-item">
+                    <span class="check-icon" style="background: rgba(0, 217, 255, 0.2); color: #00d9ff;">✓</span>
+                    <span class="text-sm text-main">{{ item }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <a href="https://wa.me/1XXXXXXXXXX?text=Hola,%20me%20interesa%20el%20Plan%20de%20Mantenimiento" 
+               target="_blank"
+               class="cta-btn" 
+               style="background: linear-gradient(135deg, #00d9ff 0%, #0099cc 100%); color: #000; max-width: 300px;">
+                Contratar Mantenimiento
+            </a>
+        </div>
+    </div>
+
+    <!-- Por qué elegirnos -->
+    <div class="mt-20">
+        <h2 class="text-3xl font-black text-center text-main uppercase mb-12">¿Por qué trabajar conmigo?</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="text-center p-6">
+                <div class="text-4xl mb-4">⚡</div>
+                <h3 class="text-lg font-black text-amber-500 uppercase mb-2">Entrega Rápida</h3>
+                <p class="text-muted text-sm">Tu sitio listo en tiempo récord sin sacrificar calidad.</p>
+            </div>
+            <div class="text-center p-6">
+                <div class="text-4xl mb-4">🎯</div>
+                <h3 class="text-lg font-black text-amber-500 uppercase mb-2">Enfoque Local</h3>
+                <p class="text-muted text-sm">Optimizado para aparecer en búsquedas de tu zona.</p>
+            </div>
+            <div class="text-center p-6">
+                <div class="text-4xl mb-4">💬</div>
+                <h3 class="text-lg font-black text-amber-500 uppercase mb-2">Soporte Directo</h3>
+                <p class="text-muted text-sm">沟通 directa. Sin intermediarios ni Bots.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Final -->
+    <div class="text-center mt-20 p-12 bg-black/30 border border-border-color rounded-lg">
+        <h3 class="text-2xl font-black text-main uppercase mb-4">¿No sabes qué necesitas?</h3>
+        <p class="text-muted mb-8">Escríbeme y te ayudo a encontrar la mejor solución.</p>
+        <a href="https://wa.me/1XXXXXXXXXX?text=Hola,%20quiero%20asesoría%20para%20mi%20negocio" 
+           target="_blank"
+           class="inline-block px-8 py-4 bg-amber-600 text-black font-black uppercase tracking-widest hover:bg-amber-500 transition-colors rounded no-underline">
+            Hablar por WhatsApp
+        </a>
+    </div>
+</div>
+{% endblock %}

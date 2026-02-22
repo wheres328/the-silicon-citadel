@@ -1,0 +1,268 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Mi Perfil - The Silicon Citadel{% endblock %}
+
+{% block body %}
+<style>
+    .profile-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 24px;
+    }
+    .stat-box {
+        background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, transparent 100%);
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        border-radius: 8px;
+        padding: 16px;
+        text-align: center;
+    }
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 900;
+        color: var(--accent-primary);
+    }
+    .stat-label {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-muted);
+        margin-top: 4px;
+    }
+    .role-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background: linear-gradient(135deg, var(--accent-primary) 0%, #b8860b 100%);
+        border-radius: 20px;
+        color: #000;
+        font-weight: 800;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    .menu-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px;
+        border-radius: 8px;
+        color: var(--text-main);
+        text-decoration: none;
+        transition: all 0.3s;
+        border: 1px solid transparent;
+    }
+    .menu-item:hover {
+        background: rgba(212, 175, 55, 0.1);
+        border-color: rgba(212, 175, 55, 0.3);
+    }
+    .menu-icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(212, 175, 55, 0.2);
+        border-radius: 8px;
+        font-size: 18px;
+    }
+    .content-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 12px;
+    }
+    .content-item {
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 12px;
+        transition: all 0.3s;
+    }
+    .content-item:hover {
+        border-color: var(--accent-primary);
+    }
+    .content-item-title {
+        font-weight: 700;
+        font-size: 13px;
+        color: var(--text-main);
+        margin-bottom: 4px;
+    }
+    .content-item-meta {
+        font-size: 10px;
+        color: var(--text-muted);
+    }
+</style>
+
+<div class="max-w-6xl mx-auto py-8 px-4">
+    <!-- Profile Header -->
+    <div class="profile-card mb-8">
+        <div class="flex flex-col md:flex-row items-center gap-8">
+            <!-- Avatar -->
+            <div class="relative">
+                <div class="w-32 h-32 rounded-full flex items-center justify-center text-6xl font-black border-4
+                    {% if user.profile.is_vip %}
+                        bg-gradient-to-br from-yellow-400 via-amber-600 to-yellow-800 border-yellow-500 shadow-yellow-600/30
+                    {% elif user.profile.role != 'member' %}
+                        bg-gradient-to-br from-purple-600 via-red-600 to-yellow-600 border-amber-500 shadow-amber-600/30
+                    {% else %}
+                        bg-gradient-to-br from-zinc-700 to-stone-900 border-white/20
+                    {% endif %}">
+                    {% if user.profile.is_vip %}👑{% elif user.profile.role == 'rey' %}👑{% elif user.profile.role == 'ancianos' %}📜{% elif user.profile.role == 'capitan' %}🔨{% elif user.profile.role == 'guardian' %}🛡️{% elif user.profile.role == 'vigilante' %}👁️{% else %}👤{% endif %}
+                </div>
+                {% if user.profile.is_vip %}
+                <div class="absolute -bottom-1 -right-1 w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-xs">VIP</div>
+                {% endif %}
+            </div>
+            
+            <!-- Info -->
+            <div class="flex-1 text-center md:text-left">
+                <h1 class="text-4xl font-black text-main uppercase tracking-tighter mb-2">{{ user.username }}</h1>
+                {% if user.profile.role != 'member' %}
+                <div class="role-badge mb-3">
+                    {{ user.profile.get_role_display }}
+                </div>
+                {% endif %}
+                <p class="text-sm text-muted">
+                    Miembro desde {{ user.date_joined|date:"F Y" }} • 
+                    Última conexión: {% if user.last_login %}{{ user.last_login|date:"d M Y" }}{% else %}Primera vez{% endif %}
+                </p>
+            </div>
+            
+            <!-- Actions -->
+            <div class="flex flex-col gap-3">
+                {% if user.profile.can_moderate %}
+                <a href="{% url 'mod_panel' %}" class="flex items-center gap-3 px-6 py-3 bg-red-800 hover:bg-red-700 text-white font-bold uppercase text-xs tracking-wider rounded-lg transition-all">
+                    <span>🛡️</span> Panel de Control
+                </a>
+                {% endif %}
+                <a href="{% url 'logout' %}" class="flex items-center gap-3 px-6 py-3 border border-border-color hover:bg-white/5 text-muted font-bold uppercase text-xs tracking-wider rounded-lg transition-all">
+                    <span>🚪</span> Cerrar Sesión
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Row -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="stat-box">
+            <div class="stat-number">{{ bookmarks_count }}</div>
+            <div class="stat-label">Artefactos Guardados</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-number">{{ comments_count }}</div>
+            <div class="stat-label">Comentarios</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-number">{{ news_count }}</div>
+            <div class="stat-label">Noticias Creadas</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-number">{{ blogs_count }}</div>
+            <div class="stat-label">Blogs Escritos</div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Left Column - Menu -->
+        <div class="lg:col-span-1">
+            <div class="profile-card">
+                <h3 class="text-xs font-black text-muted uppercase tracking-widest mb-4">Navegación</h3>
+                <div class="space-y-2">
+                    <a href="{% url 'index' %}" class="menu-item">
+                        <div class="menu-icon">🏠</div>
+                        <div>
+                            <div class="font-bold text-sm">Inicio</div>
+                            <div class="text-[10px] text-muted">Volver al portal</div>
+                        </div>
+                    </a>
+                    <a href="{% url 'vault' %}" class="menu-item">
+                        <div class="menu-icon">📦</div>
+                        <div>
+                            <div class="font-bold text-sm">Bóveda</div>
+                            <div class="text-[10px] text-muted">Explorar archivos</div>
+                        </div>
+                    </a>
+                    <a href="{% url 'categories' %}" class="menu-item">
+                        <div class="menu-icon">📂</div>
+                        <div>
+                            <div class="font-bold text-sm">Categorías</div>
+                            <div class="text-[10px] text-muted">Explorar por tipo</div>
+                        </div>
+                    </a>
+                    {% if not user.profile.is_vip %}
+                    <a href="{% url 'donate' %}" class="menu-item">
+                        <div class="menu-icon">💎</div>
+                        <div>
+                            <div class="font-bold text-sm">Upgrade VIP</div>
+                            <div class="text-[10px] text-muted">Desbloquea beneficios</div>
+                        </div>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            
+            {% if user.profile.is_vip %}
+            <div class="profile-card mt-4 border-yellow-600/30">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="text-xl">💎</span>
+                    <h3 class="text-sm font-black text-yellow-500 uppercase tracking-widest">Membresía VIP Activa</h3>
+                </div>
+                <p class="text-xs text-muted mb-4">Tienes acceso ilimitado a todos los recursos y descargas de la forja.</p>
+                <div class="text-xs text-yellow-500 font-bold">
+                    ★ BENEFICIOS ACTIVOS
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Right Column - Content -->
+        <div class="lg:col-span-2">
+            <!-- Saved Content -->
+            <div class="profile-card mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-sm font-black text-amber-500 uppercase tracking-widest">📜 Mis Artifactos</h3>
+                    <span class="text-xs text-muted">{{ bookmarks.count }} elementos</span>
+                </div>
+                <div class="content-grid">
+                    {% for bookmark in bookmarks %}
+                        {% if bookmark.news_item %}
+                        <a href="{% url 'news_detail' bookmark.news_item.slug %}" class="content-item no-underline">
+                            <div class="content-item-title">{{ bookmark.news_item.title }}</div>
+                            <div class="content-item-meta">📰 {{ bookmark.created_at|date:"d/m/Y" }}</div>
+                        </a>
+                        {% elif bookmark.blog_post %}
+                        <a href="{% url 'blog_detail' bookmark.blog_post.slug %}" class="content-item no-underline">
+                            <div class="content-item-title">{{ bookmark.blog_post.title }}</div>
+                            <div class="content-item-meta">📝 {{ bookmark.created_at|date:"d/m/Y" }}</div>
+                        </a>
+                        {% endif %}
+                    {% empty %}
+                    <p class="col-span-full text-center text-muted py-8">No tienes artefactos guardados aún.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="profile-card">
+                <h3 class="text-sm font-black text-blue-500 uppercase tracking-widest mb-4">💬 Mi Actividad Reciente</h3>
+                {% for comment in recent_comments %}
+                <div class="py-3 border-b border-border-color/30">
+                    <div class="flex justify-between items-start mb-1">
+                        <span class="text-xs font-bold text-amber-500">
+                            {% if comment.news_item %}📰 {{ comment.news_item.title|truncatechars:30 }}{% else %}📝 {{ comment.blog_post.title|truncatechars:30 }}{% endif %}
+                        </span>
+                        <span class="text-[10px] text-muted">{{ comment.created_at|timesince }}</span>
+                    </div>
+                    <p class="text-xs text-muted">{{ comment.content|truncatewords:15 }}</p>
+                </div>
+                {% empty %}
+                <p class="text-center text-muted py-8">No has comentado aún.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
