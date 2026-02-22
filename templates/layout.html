@@ -47,6 +47,101 @@
             transition: width 0.4s ease;
             box-shadow: 0 0 10px var(--accent-primary);
         }
+        
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding: 8px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+        }
+        .mobile-menu-btn span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--accent-primary);
+        }
+        
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: var(--bg-color);
+            z-index: 999;
+            padding: 60px 20px 20px;
+            overflow-y: auto;
+        }
+        .mobile-menu.active {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .mobile-menu a {
+            display: block;
+            padding: 15px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-radius: 4px;
+        }
+        .mobile-link-active {
+            background: var(--accent-primary) !important;
+            color: #000 !important;
+        }
+        .mobile-search {
+            margin-top: 10px;
+        }
+        .mobile-search-input {
+            width: 100%;
+            padding: 15px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            font-size: 14px;
+            border-radius: 4px;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header-inner-top {
+                flex-wrap: wrap;
+            }
+            .logo-box h1 {
+                font-size: 14px !important;
+            }
+            .stats-bar {
+                flex-wrap: wrap;
+            }
+            .header-bar {
+                display: none;
+            }
+            .main-menu {
+                display: none !important;
+            }
+            .recent-downloads {
+                display: none;
+            }
+            .footer {
+                padding: 20px 10px;
+            }
+        }
     </style>
 </head>
 <body class="bg-bg-color text-main">
@@ -115,7 +210,33 @@
             </div>
 
             <!-- BARRA DE NAVEGACIÓN (HEADER BAR) -->
-            <div class="header-bar mt-2">
+            <!-- Botón hamburguesa para móvil -->
+            <button id="mobile-menu-btn" class="mobile-menu-btn md:hidden" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <!-- Menú móvil -->
+            <div id="mobile-menu" class="mobile-menu md:hidden">
+                <a href="{% url 'index' %}" class="{% if request.resolver_match.url_name == 'index' %}mobile-link-active{% endif %}">🏠 Great Hall</a>
+                <a href="{% url 'vault' %}" class="{% if request.resolver_match.url_name == 'vault' %}mobile-link-active{% endif %}">⚒️ Deep Delve</a>
+                <a href="{% url 'categories' %}" class="{% if request.resolver_match.url_name == 'categories' %}mobile-link-active{% endif %}">📦 Provisión</a>
+                <a href="{% url 'connect' %}" class="{% if request.resolver_match.url_name == 'connect' %}mobile-link-active{% endif %}">🍺 Tavern</a>
+                <a href="{% url 'servicios' %}" class="{% if request.resolver_match.url_name == 'servicios' %}mobile-link-active{% endif %}">🛠️ Servicios</a>
+                <a href="{% url 'donate' %}" class="{% if request.resolver_match.url_name == 'donate' %}mobile-link-active{% endif %}">💰 Tribute</a>
+                {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}" class="mobile-link-auth">👤 {{ user.username }}</a>
+                {% else %}
+                <a href="{% url 'login' %}" class="mobile-link-auth">🔒 Entrar</a>
+                {% endif %}
+                <form action="{% url 'search_results' %}" method="get" class="mobile-search">
+                    <input name="q" type="text" placeholder="Buscar..." class="mobile-search-input">
+                </form>
+            </div>
+            
+            <!-- Menú desktop -->
+            <div class="header-bar mt-2 hidden md:block">
                 <div class="header-links">
                     <a href="{% url 'index' %}" class="{% if request.resolver_match.url_name == 'index' %}header-link-active{% endif %}">🏠 Great Hall</a>
                     <a href="{% url 'vault' %}" class="{% if request.resolver_match.url_name == 'vault' %}header-link-active{% endif %}">⚒️ Deep Delve</a>
@@ -317,6 +438,21 @@
                 top: 0,
                 behavior: 'smooth'
             });
+        });
+        
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('active');
+        }
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('mobile-menu');
+            const btn = document.getElementById('mobile-menu-btn');
+            if (menu.classList.contains('active') && !menu.contains(e.target) && !btn.contains(e.target)) {
+                menu.classList.remove('active');
+            }
         });
     </script>
 </body>
